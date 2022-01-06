@@ -1,7 +1,8 @@
 ---
 storagePath: "~/spinozacoin/blockchain"
 port: 8888
-# type:  wallet, minimal_node, full, node_history, account_history, transaction_history, node_and_account_history, node_and_transactions_history, account_and_transactions_history
+# type:  wallet, minimal_node, full, node_history, account_history, transaction_history, 
+# node_and_account_history, node_and_transactions_history, account_and_transactions_history
 type: "full"
 trustedAccountHistory: "127.0.0.1"
 trustedNodeHistory: "127.0.0.1"
