@@ -3,29 +3,79 @@
 # file COPYING or http://www.opensource.org/license/mit-license.php
 
 import asyncio
+from client import Client
+from concurrent.futures.thread import ThreadPoolExecutor
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.exceptions import InvalidSignature
 import logging
+import os
+import time
 import yaml
 
-class ConnectionPool:
-    def __init__(self):
-        self.connection_pool = set()
+def create_directory_if_needed(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
 
-    def add_new_user_to_pool(self, writer):
-        self.connection_pool.add(writer)
+def write_string_to_file(string, file_with_path):
+    with open(f"{file_with_path}", "w") as text_file:
+        text_file.write(str(string))
 
-    def send_welcome_message(self, writer):
-        message = "Hello, World!"
-        writer.write(f"{message}\n".encode())
+def create_secrets(secrets_path):
+    curve = ec.SECP256K1()
+    signature_algorithm = ec.ECDSA(hashes.SHA256())
 
-    def broadcast_user_join(self, writer):
-        self.broadcast(writer, f"{writer.nickname} just joined")
+    # Make private and public keys from the private value + curve
+    priv_key = ec.generate_private_key(curve)
+    pub_key = priv_key.public_key().public_bytes(serialization.Encoding.X962, serialization.PublicFormat.UncompressedPoint).hex()
+    priv_key_value = priv_key.private_numbers().private_value
+    create_directory_if_needed(secrets_path)
+    write_string_to_file(priv_key_value, f"{secrets_path}/node.private.key")
+    write_string_to_file(pub_key, f"{secrets_path}/node.public.key")
 
+
+
+async def handle_register(loop, host, port, message):
+
+    # Connect with trustedNode
+    print(f"handle_register connecting_to: host: {host}, port: {port}")
+    try:
+        transport, protocol = await loop.create_connection(Client,host=host, port=port)
+        print(f"client connection succeeded: {message}")
+        transport.write(f"{message}\n".encode())
+    except Exception as e:
+        print(f"Connection to {host}:{port} failed with error: {e}")
+   
+
+async def register_with_trusted_node(trustedNode, port, root_port, loop):
+    
+    print(f"Connecting to trustedNode: from {trustedNode}:{port}")
+    await handle_register(loop, trustedNode, root_port, f"test: {trustedNode}:{port}")
+    print(f"After connection to trustedNode: from {trustedNode}:{port}")
 
 async def handle_connection(reader, writer):
-    print("\n\nA client connected....\n\n")
-    connection_pool.add_new_user_to_pool(writer)
-    connection_pool.send_welcome_message(writer)
-    connection_pool.broadcast_user_join(writer)
+    # wait for message -- need to constrain by size 
+    data = await reader.readuntil(b"\n")
+    writer.write("starting...")
+    await writer.drain()
+
+    writer.close()
+    await writer.wait_closed()
+
+async def start_node(instanceId, isLive, instanceBasePath, trustedNode, basePort, loop):
+    print(f"\nstarting node: {trustedNode}:{instanceId+basePort}")
+    instanceSecretsPath = f"{instanceBasePath}/instance{instanceId}/secrets"
+    if not os.path.exists(f"{instanceSecretsPath}/node.private.key") or not os.path.exists(f"{instanceSecretsPath}/node.public.key"):
+        create_secrets(instanceSecretsPath)
+
+    if trustedNode != "127.0.0.1" or instanceId != 0:
+        await register_with_trusted_node(trustedNode, basePort+instanceId, basePort, loop)
+
+    server = await asyncio.start_server(handle_connection, trustedNode, basePort+instanceId)
+
+    print(f"Node started: {trustedNode}:{instanceId+basePort}")
+    return server
 
 async def main():
     # parse config yml
@@ -37,22 +87,23 @@ async def main():
             print(exc)
 
     # set up logging
-    logging.basicConfig(filename='../../log/spinozacoind.log', encoding='utf-8', level=config['loggingLevel'])
-    logging.info(str(config))
+    format = "%(asctime)s: %(message)s"
+    logging.basicConfig(format = format, filename='../../log/spinozacoind.log', encoding='utf-8', level=config['loggingLevel'])
 
-    # load blockchains or create if empty
-    # 1. nodes blockchain
-    # 2. accounts blockchain
-    # 3. transactions blockchain
-
-        
-    print("Awaiting broadcast...")
-    server = await asyncio.start_server(handle_connection, "127.0.0.1", config["port"])
-
+    # load up each instance which will have its secrets and will either be status "good" or status "bad"
+    countInstances = config['countInstances']
+    countDeadInstances = config['countDeadInstances']
+    # add support for paths such as ~/spinozacoin
+    instanceBasePath = os.path.expanduser(config['instanceBasePath'])
+    loop = asyncio.get_event_loop()
+    for instanceId in range(countInstances):
+        # initiate a node
+        server=await start_node(instanceId, instanceId >= countDeadInstances, instanceBasePath, config['trustedNode'], config['port'], loop)
 
     async with server:
-        await server.serve_forever()
+        await server.serve_forever() 
+          
 
-connection_pool = ConnectionPool()
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
 
