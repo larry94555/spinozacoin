@@ -34,30 +34,26 @@ def create_secrets(secrets_path):
     write_string_to_file(priv_key_value, f"{secrets_path}/node.private.key")
     write_string_to_file(pub_key, f"{secrets_path}/node.public.key")
 
-
-
-async def handle_register(loop, host, port, message):
-
+async def register_with_trusted_node(trustedNode, port, root_port, loop):
+    message = f"test: {trustedNode}:{port}"
+    host = trustedNode
     # Connect with trustedNode
     print(f"handle_register connecting_to: host: {host}, port: {port}")
     try:
-        transport, protocol = await loop.create_connection(Client,host=host, port=port)
+        transport, protocol = await loop.create_connection(Client,host=host, port=root_port)
         print(f"client connection succeeded: {message}")
         transport.write(f"{message}\n".encode())
+        print(f"message sent... waiting for reply")
     except Exception as e:
         print(f"Connection to {host}:{port} failed with error: {e}")
-   
-
-async def register_with_trusted_node(trustedNode, port, root_port, loop):
     
-    print(f"Connecting to trustedNode: from {trustedNode}:{port}")
-    await handle_register(loop, trustedNode, root_port, f"test: {trustedNode}:{port}")
-    print(f"After connection to trustedNode: from {trustedNode}:{port}")
 
 async def handle_connection(reader, writer):
     # wait for message -- need to constrain by size 
     data = await reader.readuntil(b"\n")
-    writer.write("starting...")
+    print(f"Server received: {data}")
+    await writer.write("starting...\n".encode())
+    print("After starting...")
     await writer.drain()
 
     writer.close()
