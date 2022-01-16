@@ -21,6 +21,10 @@ def create_directory_if_needed(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
+def read_string_from_file(fileWithPath):
+    with open(f"{fileWithPath}", "r") as textFile:
+        return textFile.read()
+
 def write_string_to_file(string, fileWithPath):
     with open(f"{fileWithPath}", "w") as textFile:
         textFile.write(str(string))

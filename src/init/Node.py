@@ -32,23 +32,29 @@ class Node:
 
 
     def create_secrets(self, secretsPath):
-        privateKeyValue, publicKeyValue = util.generate_private_and_public_keys()
+        self.privateKeyValue, self.publicKeyValue = util.generate_private_and_public_keys()
         util.create_directory_if_needed(secretsPath)
-        util.write_string_to_file(privateKeyValue, f"{secretsPath}/node.private.key")
-        util.write_string_to_file(publicKeyValue, f"{secretsPath}/node.public.key")
+        util.write_string_to_file(self.privateKeyValue, f"{secretsPath}/node.private.key")
+        util.write_string_to_file(self.publicKeyValue, f"{secretsPath}/node.public.key")
 
     def initialize(self):
+        print("Initialize")
         # Create secrets if not already created
-        instanceSecretsPath = f"{self.instanceBasePath}/instance{self.instanceId}/secrets"
-        if not os.path.exists(f"{instanceSecretsPath}/node.private.key") or not os.path.exists("{instanceSecretsPath}/node.public.key"):
-            self.create_secrets(instanceSecretsPath)
+        secretsPath = f"{self.instanceBasePath}/instance{self.instanceId}/secrets"
+        print(f"secretsPath: {secretsPath}")
+        if not (os.path.exists(f"{secretsPath}/node.private.key") and os.path.exists(f"{secretsPath}/node.public.key")):
+            print("Create secrets")
+            self.create_secrets(secretsPath)
+        else:
+            print("Not create secrets")
+            self.privateKeyValue = util.read_string_from_file(f"{secretsPath}/node.private.key")
+            self.publicKeyValue = util.read_string_from_file(f"{secretsPath}/node.public.key")
 
     async def register_with_trusted_node(self):
         message = f"test: {self.trustedNode}:{self.trustedPort}"
-        host = self.trustedNode
-        print(f"handle_register connecting_to: host: {host}, port: {self.trustedPort}")
+        print(f"handle_register connecting_to: host: {self.trustedNode}, port: {self.trustedPort}")
         try:
-            transport, protocol = await self.loop.create_connection(Client,host=host, port = self.trustedPort)
+            transport, protocol = await self.loop.create_connection(Client,host=self.trustedNode, port = self.trustedPort)
             print(f"client connection succeeded: {message}")
             transport.write(f"{message}\n".encode())
             print(f"message sent... waiting for reply")
