@@ -4,6 +4,7 @@ port: 8888
 # type:  wallet, minimal_node, full, node_history, account_history, transaction_history, node_and_account_history, node_and_transactions_history, account_and_transactions_history
 type: "full"
 trustedNode: "127.0.0.1"
+trustedPort: 8888
 trustedAccountHistory: "127.0.0.1"
 trustedNodeHistory: "127.0.0.1"
 trustedTransactionHistory: "127.0.0.1"
