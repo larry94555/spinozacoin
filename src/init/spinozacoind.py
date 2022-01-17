@@ -2,9 +2,15 @@
 # Distributed under the MIT software license, see the accompanying
 # file COPYING or http://www.opensource.org/license/mit-license.php
 
+# The application should provide a server rich enough that it is straight forward to write a simple api to do one of the following:
+# 1.  Get status of server ("up", "joining", "down", "flagged")
+# 2.  Add a new node
+# 3.  Add a wallet
+# 4.  Add an application that runs on top of the network (ie a smart contract)
+
 import asyncio
 import logging
-from Node import Node
+from node import Node
 import util
 
 async def main():

@@ -12,7 +12,7 @@ class Node:
         self.trustedNode = config['trustedNode']
         self.trustedPort = config['trustedPort']
         self.basePort = config['port']
-        self.networking = Networking(loop)
+        self.networking = Networking(instanceId, "127.0.0.1", instanceId + self.basePort, loop)
 
     def validate_config(self, config):
         for property in ['countDeadInstances', 'instanceBasePath', 'trustedNode', 'trustedPort', 'port']:
@@ -40,19 +40,15 @@ class Node:
             self.privateKeyValue = util.read_string_from_file(f"{secretsPath}/node.private.key")
             self.publicKeyValue = util.read_string_from_file(f"{secretsPath}/node.public.key")
 
-    async def register_with_trusted_node(self):
-        await self.networking.register_with_node(self.trustedNode, self.trustedPort)
-
     async def start_node(self):
         if self.trustedNode != "127.0.0.1" or self.instanceId != 0:
-            await self.register_with_trusted_node()
+            await self.networking.announce_to(self.trustedNode, self.trustedPort)
 
-        server = await self.networking.listen("127.0.0.1", self.basePort + self.instanceId)
+        server = await self.networking.listen()
         print(f"Node started: {self.trustedNode}:{self.instanceId+self.basePort}")
         return server 
     
     async def join_network(self):
         self.initialize()
         return await self.start_node()
-        
-        
+
