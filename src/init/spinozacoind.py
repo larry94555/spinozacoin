@@ -9,28 +9,32 @@
 # 4.  Add an application that runs on top of the network (ie a smart contract)
 
 import asyncio
+from config import Config
+from typing import Final
 import logging
 from node import Node
 import util
 
+SPINOZA_COIN_YAML_FILE : Final = "../../config/spinozacoin.yml"
+SPINOZA_COIN_LOG_FILE : Final = "../../log/spinozacoind.log"
+
+
 async def main():
-    config = util.read_yaml("../../config/spinozacoin.yml")
-    if config == None:
-       return
- 
-    util.config_logging("../../log/spinozacoind.log", config['loggingLevel'])
+
+    config = Config(SPINOZA_COIN_YAML_FILE)
+    util.config_logging(SPINOZA_COIN_LOG_FILE, config.get_logging_level())
 
     # load up each instance which will have its secrets and will either be status "good" or status "bad"
-    countInstances = config['countInstances']
+    count_instances = config.get_count_instances()
     # add support for paths such as ~/spinozacoin
     loop = asyncio.get_event_loop()
-    for instanceId in range(countInstances):
+    for instance_id in range(count_instances):
 
         # initiate a node
-        node = Node(instanceId, config, loop)
+        node = Node(instance_id, config, loop)
         server = await node.join_network()
 
-    print(f"All {countInstances} node{util.optional_s(countInstances)} have started")
+    print(f"All {count_instances} node{util.optional_s(count_instances)} have started")
     async with server:
         await server.serve_forever() 
           

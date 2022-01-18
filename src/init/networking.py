@@ -4,16 +4,13 @@ from envelope_handler import EnvelopeHandler
 
 class Networking:
 
-    def __init__(self, instanceId, host, port, loop):
-        self.loop = loop
-        self.instanceId = instanceId
-        self.host = host
-        self.port = port
+    def __init__(self, node):
+        self.node = node
 
-    async def announce_to(self, destinationHost, destinationPort):
-        envelope = Envelope(self.instanceId, self.host, self.port, self.loop)
-        return await envelope.sendTo(destinationHost, destinationPort, commands.ANNOUNCE)
+    async def announce_to(self, destination_host, destination_port):
+        envelope = Envelope(self.node)
+        return await envelope.send_to(destination_host, destination_port, commands.ANNOUNCE)
 
     async def listen(self):
-        envelopeHandler = EnvelopeHandler(self.host, self.port)
+        envelopeHandler = EnvelopeHandler(self.node)
         return await envelopeHandler.run() 

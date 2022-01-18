@@ -1,17 +1,23 @@
 ---
-instanceBasePath: ~/spinozacoin
-port: 8888
+instance_base_path: ~/spinozacoin
+host: "127.0.0.1"
+base_port: 8888
 # type:  wallet, minimal_node, full, node_history, account_history, transaction_history, node_and_account_history, node_and_transactions_history, account_and_transactions_history
 type: "full"
-trustedNode: "127.0.0.1"
-trustedPort: 8888
-trustedAccountHistory: "127.0.0.1"
-trustedNodeHistory: "127.0.0.1"
-trustedTransactionHistory: "127.0.0.1"
+trusted_node: "127.0.0.1"
+trusted_port: 8888
+trusted_account_history: "127.0.0.1"
+trusted_account_history_port: 8888
+trusted_node_history: "127.0.0.1"
+trusted_node_history_port: 8888
+trusted_transaction_history: "127.0.0.1"
+trusted_transaction_historyPort: 8888
 # each will listen on port + i (with i = 0, 1, 2, ..., instances-1)
-countInstances: 3
+count_instances: 3
 # count of dead instances
 # Used solely for testing.  Dead instances exist but don't react to a broadcast.  Should be quickly ignored.
-countDeadInstances: 0
+count_dead_instances: 0
+# count of unreliable instances
+count_unreliable_instances: 0
 # logging.CRITICAL=50|logging.ERROR=40|logging.WARNING=30|logging.INFO=20|logging.DEBUG=10|logging.NOTSET=0
-loggingLevel: 10
+logging_level: 10

@@ -14,11 +14,11 @@ from client import Client
 class Envelope:
  
     # synchronize on a file for now 
-    def __init__(self, host, port, instanceId, loop):
-        self.host = host
-        self.port = port
-        self.instanceId = instanceId
-        self.loop = loop
+    def __init__(self, node):
+        self.node = node
+
+    def build_envelope(self):
+        pass
 
     async def handle_connection(self, reader, writer):
         # wait for message - nned to constrain by size
@@ -29,16 +29,16 @@ class Envelope:
         writer.close()
         await writer.wait_closed()
 
-    async def sendTo(self, destinationHost, destinationPort, command):
+    async def send_to(self, destination_host, destination_port, command):
         # build
-        message = f"test: {destinationHost}:{destinationPort}"
-        print(f"announce_to_node connecting_to: host: {destinationHost}, port: {destinationPort}")
+        message = f"test: {destination_host}:{destination_port}"
+        print(f"announce_to_node connecting_to: host: {destination_host}, port: {destination_port}")
         try:
-            transport, protocol = await self.loop.create_connection(Client,host=destinationHost, port = destinationPort)
+            transport, protocol = await self.node.loop.create_connection(Client,host=destination_host, port = destination_port)
             print(f"client connection succeeded: {message}")
             # This should be a command such as #send_node_info
             transport.write(f"{message}\n".encode())
             print(f"message sent... waiting for reply")
         except Exception as e:
-            print(f"Connection to {destinationHost}:{destinationPort} failed with error: {e}")
+            print(f"Connection to {destination_host}:{destination_port} failed with error: {e}")
     
