@@ -17,4 +17,9 @@ class EnvelopeHandler:
 
 
     async def run(self):
-        return await asyncio.start_server(self.handle_connection, self.node.host, self.node.port)
+        return await asyncio.start_server(
+	    self.handle_connection, 
+            self.node.host, 
+            self.node.port,
+            limit = 10000
+        )
