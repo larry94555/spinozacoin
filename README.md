@@ -6,8 +6,9 @@ a python-based blockchain
 2. pip install pyyaml
 3. pip install cryptography
 4. pip install typing
-5. update spinozacoin.yml based on your set up (typically found in ~/spinozacoin/config/)
-6. mkdir ~/spinozacoin/log
+5. pip install tinyec
+6. update spinozacoin.yml based on your set up (typically found in ~/spinozacoin/config/)
+7. mkdir ~/spinozacoin/log
 
 # Run
 python spinozacoind.py (found in ~/spinozacoin/src/init)
