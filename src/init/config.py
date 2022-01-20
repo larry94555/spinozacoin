@@ -1,4 +1,5 @@
 from typing import Final
+import os
 import util
 
 # Fields of config file
@@ -38,7 +39,7 @@ class Config:
                 exit()
 
     def get_instance_base_path(self):
-        return self.config[INSTANCE_BASE_PATH]
+        return os.path.expanduser(self.config[INSTANCE_BASE_PATH])
 
     def get_host(self):
         return self.config[HOST]

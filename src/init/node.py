@@ -13,29 +13,35 @@ class Node:
         self.networking = Networking(self)
 
     def create_secrets(self, private_key_file, public_key_file):
-        private_key_value, public_key_value = util.generate_private_and_public_keys()
-        util.write_string_to_file(private_key_value, private_key_file)
-        util.write_string_to_file(public_key_value, public_key_file)
+        serialized_private_key, serialized_public_key = util.generate_private_and_public_keys()
+        util.write_bytes_to_file(serialized_private_key, private_key_file)
+        util.write_bytes_to_file(serialized_public_key, public_key_file)
 
     def get_secrets_path(self):
         return f"{self.config.get_instance_base_path()}/instance{self.instance_id}/secrets"
 
     def get_private_key_file(self):
-        return f"{self.get_secrets_path()}/node.private.key"
+        return f"{self.get_secrets_path()}/node.private.key.pem"
 
     def get_public_key_file(self):
-        return f"{self.get_secrets_path()}/node.public.key"
+        return f"{self.get_secrets_path()}/node.public.key.pem"
+
+    def get_private_key(self):
+        return util.get_private_key_from_serialized_value(self.get_private_key_serialized_value())
+
+    def get_public_key_serialized_value(self):
+        return util.read_bytes_from_file(self.get_public_key_file()) 
+
+    def get_private_key_serialized_value(self):
+        return util.read_bytes_from_file(self.get_private_key_file())
 
     def get_public_key_value(self):
-        return util.read_string_from_file(self.get_public_key_file()) 
-
-    def get_private_key_value(self):
-        return util.read_string_from_file(self.get_private_key_file())
+        return util.get_public_key_value_from_serialized_value(self.get_public_key_serialized_value())
       
     def initialize(self):
         # Create secrets if not already created
-        util.create_directory_if_needed(self.get_secrets_path())
         print(f"secrets_path: {self.get_secrets_path()}")
+        util.create_directory_if_needed(self.get_secrets_path())
         if not (os.path.exists(self.get_private_key_file()) and os.path.exists(self.get_public_key_file())):
             print("Creating new secret")
             self.create_secrets(self.get_private_key_file(), self.get_public_key_file())

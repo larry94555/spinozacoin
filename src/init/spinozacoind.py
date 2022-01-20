@@ -18,7 +18,6 @@ import util
 SPINOZA_COIN_YAML_FILE : Final = "../../config/spinozacoin.yml"
 SPINOZA_COIN_LOG_FILE : Final = "../../log/spinozacoind.log"
 
-
 async def main():
 
     config = Config(SPINOZA_COIN_YAML_FILE)

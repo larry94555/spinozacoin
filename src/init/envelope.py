@@ -40,28 +40,30 @@ class Envelope:
     def __init__(self, node, identifier, action, action_details=None):
         self.node = node
         sequence_id = self.next_id()
-        timestamp = self.timestamp()
-        encrypted_action = util.encrypt_action(
-            private_key_value = node.get_private_key_value(),
-	    sequence_id=sequence_id, 
-	    timestamp=timestamp, 
-            action=action,
-            action_details=action_details
+        timestamp = util.utc_timestamp()
+        json = util.convert_dict_to_json_string({
+                   "sequence_id": sequence_id,
+                   "timestamp": timestamp,
+                   "action": action,
+                   "action_details": action_details
+        })
+        envelope_signature = util.get_signature_for_json(
+            private_key = node.get_private_key(),
+            json_string = json
         )
         self.encoded_payload = self.build_encoded_payload(
-	    prefix=SPINOZA_COIN_PREFIX,
-            identifier=identifier,
-            encrypted_action = encrypted_action
+            json=util.convert_dict_to_json_string({
+                     "identifier": identifier,
+                     "signature": envelope_signature.hex(),
+                     "json": json
+            })
         )
 
     def next_id(self):
         return 1
 
-    def timestamp(self):
-        return 0
-
-    def build_encoded_payload(self, prefix, identifier, encrypted_action):
-        return b"This is a test\n"
+    def build_encoded_payload(self, json):
+        return SPINOZA_COIN_PREFIX + json.encode() + SPINOZA_COIN_SUFFIX
 
     async def send_to(self, destination_host, destination_port):
         # build
