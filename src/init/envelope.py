@@ -1,6 +1,7 @@
 import asyncio
 import command
 from typing import Final
+import json
 import util
 
 # the envelope has two parts:
@@ -14,8 +15,7 @@ import util
 #
 # Envelope is always for source when being built and always for the destination when being parsed
 
-SPINOZA_COIN_PREFIX: Final = b'\x02\x03\x05\x07'
-SPINOZA_COIN_SUFFIX: Final = b'\x07\x07\x07\x07'
+SEQUENCE_ID_FILE: Final = "sequence_id.txt"
 
 class EnvelopeClientProtocol(asyncio.Protocol):
     def __init__(self, envelope, loop):
@@ -37,38 +37,38 @@ class EnvelopeClientProtocol(asyncio.Protocol):
 class Envelope:
  
     # synchronize on a file for now 
-    def __init__(self, node, identifier, action, action_details=None):
-        self.node = node
+    def __init__(self, networking, identifier, action, action_details=None):
+        self.networking = networking
         sequence_id = self.next_id()
         timestamp = util.utc_timestamp()
-        json = util.convert_dict_to_json_string({
+        action_dict = {
                    "sequence_id": sequence_id,
                    "timestamp": timestamp,
                    "action": action,
                    "action_details": action_details
-        })
+        }
         envelope_signature = util.get_signature_for_json(
-            private_key = node.get_private_key(),
-            json_string = json
+            private_key = networking.node.get_private_key(),
+            json_string = json.dumps(action_dict)
         )
         self.encoded_payload = self.build_encoded_payload(
-            json=util.convert_dict_to_json_string({
+            json=json.dumps({
                      "identifier": identifier,
                      "signature": envelope_signature.hex(),
-                     "json": json
+                     "json": action_dict
             })
         )
 
     def next_id(self):
-        return 1
+        return util.increase_and_return_value(self.networking.node.get_instance_path(), SEQUENCE_ID_FILE)
 
     def build_encoded_payload(self, json):
-        return SPINOZA_COIN_PREFIX + json.encode() + SPINOZA_COIN_SUFFIX
+        return self.networking.SPINOZA_COIN_PREFIX + json.encode() + self.networking.SPINOZA_COIN_SUFFIX
 
     async def send_to(self, destination_host, destination_port):
         # build
         try:
-            transport, protocol = await self.node.loop.create_connection(lambda: EnvelopeClientProtocol(self, self.node.loop), host=destination_host, port = destination_port)
+            transport, protocol = await self.networking.node.loop.create_connection(lambda: EnvelopeClientProtocol(self, self.networking.node.loop), host=destination_host, port = destination_port)
             # This should be a command such as #send_node_info
             transport.write(self.encoded_payload)
             # There should always be a return envelope

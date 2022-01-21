@@ -2,7 +2,7 @@ from typing import Final
 
 # Commands
 #
-# 1. ANNOUNCE: associate alias with public key
+# 1. ANNOUNCE: send out host/port and receive an alias (starts gossip process to accept a new node)
 ANNOUNCE: Final = "announce"
 # 2. NODE_UP: associate alias with host, port, timestamp, sequence_id
 NEW_NODE: Final = "node_up"

@@ -17,8 +17,11 @@ class Node:
         util.write_bytes_to_file(serialized_private_key, private_key_file)
         util.write_bytes_to_file(serialized_public_key, public_key_file)
 
+    def get_instance_path(self):
+        return f"{self.config.get_instance_base_path()}/instance{self.instance_id}"
+
     def get_secrets_path(self):
-        return f"{self.config.get_instance_base_path()}/instance{self.instance_id}/secrets"
+        return f"{self.get_instance_path()}/secrets"
 
     def get_private_key_file(self):
         return f"{self.get_secrets_path()}/node.private.key.pem"
