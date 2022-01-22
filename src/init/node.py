@@ -1,3 +1,5 @@
+import node_list
+from node_list import NodeList
 from networking import Networking
 import os
 import util
@@ -53,6 +55,11 @@ class Node:
 
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
+            if not os.path.exists(f"{self.get_instance_path()}/{node_list.NODE_LIST_FILE}"):
+                nodes = NodeList(self.get_instance_path())
+                self.alias = str(util.utc_timestamp())+"_0"
+                nodes.add_validated_node(self)
+                nodes.persist()
             await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
 
         server = await self.networking.listen()
