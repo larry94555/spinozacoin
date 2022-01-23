@@ -9,7 +9,7 @@ class Response:
         timestamp = util.utc_timestamp()
         response_json = {
             "timestamp": timestamp,
-            "json": payload_json
+            "result": payload_json
         }
         self.message = Message(networking, identifier, response_json)
 

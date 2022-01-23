@@ -13,7 +13,7 @@ class Message:
             json_string=json.dumps({
                 "identifier": identifier,
                 "signature": signature.hex(),
-                "json": message_json
+                "body": message_json
             })
         )
 

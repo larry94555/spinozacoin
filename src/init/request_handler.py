@@ -20,7 +20,7 @@ class RequestHandler:
            
             request_encoded = data_received[self.networking.PREFIX_SIZE:-self.networking.SUFFIX_SIZE].decode()
             request_json = json.loads(request_encoded)
-
+            
             response_json = self.networking.get_response(request_json)
             response = Response(
                 reader = reader,

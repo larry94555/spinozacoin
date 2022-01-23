@@ -38,16 +38,16 @@ class RequestClientProtocol(asyncio.Protocol):
 class Request:
  
     # synchronize on a file for now 
-    def __init__(self, networking, identifier, json):
+    def __init__(self, networking, identifier, action_json):
         self.networking = networking
         sequence_id = self.next_id()
         timestamp = util.utc_timestamp()
-        request_json = {
+        request_body = {
                    "sequence_id": sequence_id,
                    "timestamp": timestamp,
-                   "json": json
+                   "action": action_json
         }
-        self.message = Message(networking, identifier, request_json)
+        self.message = Message(networking, identifier, request_body)
 
     def next_id(self):
         return util.increase_and_return_value(self.networking.node.get_instance_path(), SEQUENCE_ID_FILE)

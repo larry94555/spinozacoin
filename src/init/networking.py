@@ -4,6 +4,8 @@ from request_handler import RequestHandler
 from typing import Final
 import util
 
+NUM_NODES_RETURNED: Final = 100
+
 class Networking:
 
     def __init__(self, node):
@@ -17,8 +19,8 @@ class Networking:
         request = Request(
             networking=self,
             identifier = self.node.get_public_key_value(),
-            json = { 
-                "action": command.ANNOUNCE_NODE,
+            action_json = { 
+                "action_type": command.ANNOUNCE_NODE,
                 "host": self.node.host,
                 "port": self.node.port
             }
@@ -26,7 +28,7 @@ class Networking:
         return await request.send_to(destination_host, destination_port)
 
     def get_identifier(self):
-        return 123
+        return self.node.checkpoint
 
     def get_response(self, request_json):
 
@@ -41,13 +43,22 @@ class Networking:
         }
 
         # need to change, json/json seems wrong....
-        action = request_json['json']['json']['action']
+        action = request_json['body']['action']['action_type']
         return command_handler[action](request_json)
 
+    # Returns:
+    # 1. checkpoint
+    # 2. offset
+    # 3. step
     def handle_announce_node(self, request_json):
+        latest_checkpoint = self.node.directory.get_latest_checkpoint()
+        start_pos = util.random_position(latest_checkpoint)
+        step = util.random_step(latest_checkpoint)
         return {
-            "checkpoint": 0,
-            "node": "nodeinfo"
+            "checkpoint": latest_checkpoint,
+            "start": start_pos,
+            "step": step,
+            "next_n_nodes": self.node.directory.up_to_n(NUM_NODES_RETURNED, start_pos, step, 0, latest_checkpoint)
         }
             
     def handle_uptake_checkpoint(self, request_json):

@@ -1,8 +1,11 @@
-import node_list
-from node_list import NodeList
+import node_directory
+from typing import Final
+from node_directory import NodeDirectory
 from networking import Networking
 import os
 import util
+
+CHECKPOINT_FILENAME: Final = "checkpoint.txt"
 
 class Node:
 
@@ -12,12 +15,19 @@ class Node:
         self.port = config.get_base_port() + instance_id
         self.config = config
         self.loop = loop
+        self.checkpoint = None
+        self.status = None
         self.networking = Networking(self)
+        self.directory = NodeDirectory(self.get_instance_path())
+        self.try_to_set_node_info()
 
     def create_secrets(self, private_key_file, public_key_file):
         serialized_private_key, serialized_public_key = util.generate_private_and_public_keys()
         util.write_bytes_to_file(serialized_private_key, private_key_file)
         util.write_bytes_to_file(serialized_public_key, public_key_file)
+
+    def get_checkpoint_file(self):
+        return f"{self.get_instance_path}/{CHECKPOINT_FILENAME}"
 
     def get_instance_path(self):
         return f"{self.config.get_instance_base_path()}/instance{self.instance_id}"
@@ -42,6 +52,14 @@ class Node:
 
     def get_public_key_value(self):
         return util.get_public_key_value_from_serialized_value(self.get_public_key_serialized_value())
+
+    def handle_first_node(self):
+         
+        if not os.path.exists(f"{self.get_instance_path()}/{node_directory.NODE_DIRECTORY_FILE}"):
+            self.checkpoint=1
+            self.status="up" 
+            self.directory.add_checkpoint([self],0) 
+            self.directory.persist()
       
     def initialize(self):
         # Create secrets if not already created
@@ -53,20 +71,27 @@ class Node:
         else:
             print("Secret already exists")
 
+    async def join_network(self):
+        self.initialize()
+        return await self.start_node()
+
+    def persist(self):
+        if self.checkpoint != None:
+            util.write_num_to_file(self.checkpoint, self.get_checkpoint_file())
+
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
-            if not os.path.exists(f"{self.get_instance_path()}/{node_list.NODE_LIST_FILE}"):
-                nodes = NodeList(self.get_instance_path())
-                self.alias = str(util.utc_timestamp())+"_0"
-                nodes.add_validated_node(self)
-                nodes.persist()
             await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
+        else:
+            self.handle_first_node()
 
         server = await self.networking.listen()
         print(f"Node started: {self.config.get_trusted_node()}:{self.instance_id+self.config.get_base_port()}")
         return server 
     
-    async def join_network(self):
-        self.initialize()
-        return await self.start_node()
+    def try_to_set_node_info(self):
+        if os.path.exists(self.get_checkpoint_file()):
+            self.checkpoint = util.read_num_from_file(self.get_checkpoint_file()) 
+            self.directory.set_node_info(self)
+
 
