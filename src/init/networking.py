@@ -42,6 +42,12 @@ class Networking:
         )
         return await request.send_to(destination_host, destination_port)
 
+    async def ready_to_join(self):
+        print(f"networking: ready_to_join...")
+
+    async def resolve_source_inconsistency(self):
+        print(f"networking: resolve source inconsistency")
+
     def get_identifier(self):
         return self.node.checkpoint
 

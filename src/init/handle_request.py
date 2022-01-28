@@ -23,7 +23,8 @@ class HandleRequest:
             command.NOMINATE_CHECKPOINTS: self.handle_nominate_checkpoints,
             command.VALIDATE_CHECKPOINTS: self.handle_validate_checkpoints,
             command.NODE_UPDATE: self.handle_node_update,
-            command.CHECK_HASH: self.handle_check_hash
+            command.CHECK_HASH: self.handle_check_hash,
+            command.COMPROMISED: self.handle_compromised
         }
 
         # need to change, json/json seems wrong....
@@ -82,4 +83,7 @@ class HandleRequest:
             "hash": action['hash'],
             "result": result
         }
+
+    def handle_compromised(self, request_json):
+        pass
      

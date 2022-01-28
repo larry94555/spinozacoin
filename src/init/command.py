@@ -28,5 +28,7 @@ NODE_UPDATE: Final = "node_update"
 # 9. CHECK_HASH: send out a checkpoint and hash to validate it is consistent
 # A node send out a checkpoint and a hash.  The node sends back either OK or BAD signed
 CHECK_HASH: Final = "check_hash"
-
+# 10.  COMPROMISED: initiate a broadcast that a private key has been compromised
+# Can only be sent by a node that has the private key
+COMPROMISED: Final = "compromised"
 

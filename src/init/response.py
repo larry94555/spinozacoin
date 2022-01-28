@@ -4,7 +4,6 @@ import util
 class Response:
     
     def __init__(self, reader, writer, networking, identifier, payload_json):
-        print(f"\nResponse __init__", flush=True)
         self.reader = reader
         self.writer = writer
         timestamp = util.utc_timestamp()

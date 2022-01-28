@@ -7,6 +7,12 @@ import util
 
 CHECKPOINT_FILENAME: Final = "checkpoint.txt"
 
+# Status values
+STATUS_NEW: Final = "new"
+STATUS_DOWN: Final = "down"
+STATUS_UP: Final = "up"
+STATUS_UNRELIABLE: Final = "unreliable"
+
 class Node:
 
     # status:  None (initialization)
@@ -61,7 +67,7 @@ class Node:
         return util.get_public_key_value_from_serialized_value(self.get_public_key_serialized_value())
 
     def handle_first_node(self):
-        self.status="up"
+        self.status=STATUS_UP
         if not os.path.exists(self.get_node_directory_file()):
             self.checkpoint=1
             self.directory.add_checkpoint([self],0) 
@@ -90,7 +96,7 @@ class Node:
 
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
-            self.status="new" if self.checkpoint == None else "down"
+            self.status=STATUS_NEW if self.checkpoint == None else STATUS_DOWN
             await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
         else:
             self.handle_first_node()

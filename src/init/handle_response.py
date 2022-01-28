@@ -1,5 +1,6 @@
 import asyncio
 import command
+import node
 
 class HandleResponse:
 
@@ -7,7 +8,7 @@ class HandleResponse:
         self.networking = networking
 
     async def run(self, response_json):
-
+ 
         print(f"\nHandleResponse.run: response_json: {response_json}")
 
         response_handler = {
@@ -19,10 +20,14 @@ class HandleResponse:
             command.NOMINATE_CHECKPOINTS: self.handle_nominate_checkpoints_response,
             command.VALIDATE_CHECKPOINTS: self.handle_validate_checkpoints_response,
             command.NODE_UPDATE: self.handle_node_update_response,
-            command.CHECK_HASH: self.handle_check_hash_response
+            command.CHECK_HASH: self.handle_check_hash_response,
+            command.COMPROMISED: self.handle_compromised_response
         }
         action = response_json['body']['response']['action_type']
-        return await response_handler[action](response_json)
+        try:
+            await response_handler[action](response_json)
+        except Exception as e:
+            print(f"HandleResponse: run: hit exception: {e}")
 
     # 1. Add nodes received with source included (validate source)
     # 2. If complete, then generate hash and validate with trusted node
@@ -86,4 +91,19 @@ class HandleResponse:
 
     async def handle_check_hash_response(self, response_json):
         print(f"\nhandle_check_hash_response: {response_json}")
+        result = response_json['body']['response']['result']
+        checkpoint = response_json['body']['response']['checkpoint']
+        print(f"result: {result}, node status: {self.networking.node.status}, checkpoint: {checkpoint}")
+        if self.networking.node.status == node.STATUS_NEW and result == "GOOD":
+            self.networking.node.status = node.STATUS_DOWN
+            print(f"\nhandle_check_hash_response: node status: {self.networking.node.status}, ready_to_join")
+            asyncio.create_task(self.networking.ready_to_join())
+        else:
+            print(f"\nhandle_check_hash_response: node status: {self.networking.node.status}, result: {result}")
+            if self.networking.node.status == node.STATUS_NEW:
+                asyncio.create_task(self.networking.resolve_source_inconsistency())
+        return (checkpoint, result)
+
+    async def handle_compromised_response(self, response_json):
+        pass
         
