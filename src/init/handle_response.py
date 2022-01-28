@@ -18,7 +18,8 @@ class HandleResponse:
             command.READY_TO_JOIN: self.handle_ready_to_join_response,
             command.NOMINATE_CHECKPOINTS: self.handle_nominate_checkpoints_response,
             command.VALIDATE_CHECKPOINTS: self.handle_validate_checkpoints_response,
-            command.NODE_UPDATE: self.handle_node_update_response
+            command.NODE_UPDATE: self.handle_node_update_response,
+            command.CHECK_HASH: self.handle_check_hash_response
         }
         action = response_json['body']['response']['action_type']
         return await response_handler[action](response_json)
@@ -55,12 +56,7 @@ class HandleResponse:
             print(f"\nport: {self.networking.node.port}: check_hash_with trusted node: checkpoint={total_nodes}, hash={self.networking.node.directory.get_hash(total_nodes)}")
             source_host, source_port = self.networking.node.directory.get_host_and_port(identifier)
             print(f"\nsource_host: {source_host}, source_port: {source_port}")
-            task = asyncio.create_task(self.networking.check_hash_with(source_host,source_port,checkpoint=total_nodes,hash=(self.networking.node.directory.get_hash(total_nodes))))
-            try:
-                await asyncio.wait_for(task, timeout=2)
-            except asnycio.TimeoutError:
-                print("timeout error")
-                pass
+            asyncio.create_task(self.networking.check_hash_with(source_host,source_port,checkpoint=total_nodes,hash=(self.networking.node.directory.get_hash(total_nodes))))
             
         # if validation successful, do ready_to_join
         # if validation is not successful, identify the flawed source, and get n through update_checkpoint through alternative source
@@ -87,3 +83,7 @@ class HandleResponse:
 
     async def handle_node_update_response(self, response_json):
         pass
+
+    async def handle_check_hash_response(self, response_json):
+        print(f"\nhandle_check_hash_response: {response_json}")
+        

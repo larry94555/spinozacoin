@@ -9,6 +9,10 @@ CHECKPOINT_FILENAME: Final = "checkpoint.txt"
 
 class Node:
 
+    # status:  None (initialization)
+    #          New (if starting for the first time)
+    #          Down (if have checkpoint assigned)
+    #          Up (after validation) 
     def __init__(self, instance_id, config, loop):
         self.instance_id = instance_id
         self.host = config.get_host()
@@ -86,9 +90,11 @@ class Node:
 
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
+            self.status="new" if self.checkpoint == None else "down"
             await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
         else:
             self.handle_first_node()
+        print(f"\nstart_node: port: {self.port}, status: {self.status}")
 
         return await self.networking.listen()
     
