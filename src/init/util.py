@@ -39,6 +39,10 @@ def create_directory_if_needed(path):
     if not os.path.exists(path):
         os.makedirs(path)
 
+# generate SHA256(x)
+def generate_hash(hashable_string):
+    return hashlib.sha256(hashable_string.encode()).hexdigest()
+
 def generate_private_and_public_keys():
     curve = ec.SECP256K1()
     private_key = ec.generate_private_key(curve)

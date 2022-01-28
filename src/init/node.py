@@ -27,10 +27,13 @@ class Node:
         util.write_bytes_to_file(serialized_public_key, public_key_file)
 
     def get_checkpoint_file(self):
-        return f"{self.get_instance_path}/{CHECKPOINT_FILENAME}"
+        return f"{self.get_instance_path()}/{CHECKPOINT_FILENAME}"
 
     def get_instance_path(self):
         return f"{self.config.get_instance_base_path()}/instance{self.instance_id}"
+
+    def get_node_directory_file(self):
+        return f"{self.get_instance_path()}/{node_directory.NODE_DIRECTORY_FILE}"
 
     def get_secrets_path(self):
         return f"{self.get_instance_path()}/secrets"
@@ -54,12 +57,14 @@ class Node:
         return util.get_public_key_value_from_serialized_value(self.get_public_key_serialized_value())
 
     def handle_first_node(self):
-         
-        if not os.path.exists(f"{self.get_instance_path()}/{node_directory.NODE_DIRECTORY_FILE}"):
+        self.status="up"
+        if not os.path.exists(self.get_node_directory_file()):
             self.checkpoint=1
-            self.status="up" 
             self.directory.add_checkpoint([self],0) 
             self.directory.persist()
+        if not os.path.exists(self.get_checkpoint_file()):
+            self.checkpoint=1
+            self.persist()
       
     def initialize(self):
         # Create secrets if not already created
@@ -85,9 +90,7 @@ class Node:
         else:
             self.handle_first_node()
 
-        server = await self.networking.listen()
-        print(f"Node started: {self.config.get_trusted_node()}:{self.instance_id+self.config.get_base_port()}")
-        return server 
+        return await self.networking.listen()
     
     def try_to_set_node_info(self):
         if os.path.exists(self.get_checkpoint_file()):

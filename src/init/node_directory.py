@@ -4,6 +4,7 @@ import util
 
 NODE_BACKUP_HISTORY: Final = 1
 NODE_DIRECTORY_FILE: Final = "node_directory.json"
+DEFAULT_HASH: Final = "007"
 
 class NodeDirectory:
 
@@ -16,14 +17,40 @@ class NodeDirectory:
     def add_node(self, node):
         self.node_directory[node.checkpoint] = self.get_node_info(node)
 
+    def add_next_n_nodes(self, source, node_info_list):
+        for node_info in node_info_list:
+            node_info['source'] = source
+            self.node_directory[str(node_info['checkpoint'])] = node_info
+        self.persist()
+
     def add_checkpoint(self, node_list, base_checkpoint):
         for i, node in enumerate(sorted(node_list, key=lambda x: f"{x.host}:{x.port}")):
             node.checkpoint = base_checkpoint + i + 1
             self.add_node(node)
-        
-    def get_latest_checkpoint(self):
-        return len(self.node_directory)
 
+    def generate_hash(self, checkpoint_int):
+        current_node = self.node_directory[str(checkpoint_int)]
+        previous_node = self.node_directory[str(checkpoint_int-1)] if checkpoint_int > 1 else None
+        previous_hash = previous_node['hash'] if previous_node != None else DEFAULT_HASH
+        return util.generate_hash(self.generate_hashable_string(current_node, previous_hash))
+
+    def generate_hashable_string(self, current_node, previous_hash):
+        return f"{current_node['checkpoint']}|{current_node['public_key']}|{current_node['host']}|{current_node['port']}|{previous_hash}"
+  
+    def generate_hashes(self):
+        for i in range(len(self.node_directory)):
+            self.set_hash_value(i+1, self.generate_hash(i+1))
+
+    def get_hash(self, checkpoint):
+        if (node_info := self.node_directory.get(str(checkpoint),None)) != None:
+            return node_info.get("hash", "no hash")          
+        else:
+            return f"Node not found for checkpoint: {checkpoint}"
+        
+    def get_host_and_port(self, identifier):
+        node_info = self.node_directory[str(identifier)]
+        return (node_info['host'], node_info['port'])
+            
     def get_node_info(self, node):
         return {
             "checkpoint": node.checkpoint,
@@ -35,6 +62,9 @@ class NodeDirectory:
 
     def has_checkpoint(self, checkpoint):
         return checkpoint in self.node_directory
+
+    def size(self):
+        return len(self.node_directory)
 
     def up_to_n(self, num_nodes_returned, start_pos, step, offset, size):
         if (n := min(num_nodes_returned,size - offset)) == 0:
@@ -49,6 +79,10 @@ class NodeDirectory:
     def persist(self):
         util.backup_file(self.node_file,NODE_BACKUP_HISTORY)
         util.write_dict_to_file(self.node_directory, self.node_file) 
+
+    def set_hash_value(self, checkpoint, hash):
+        node_info = self.node_directory[str(checkpoint)] 
+        node_info['hash'] = hash
 
     def set_node_info(self, node):
         if self.has_checkpoint(node.checkpoint):

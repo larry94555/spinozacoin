@@ -33,7 +33,7 @@ async def main():
         node = Node(instance_id, config, loop)
         server = await node.join_network()
 
-    print(f"All {count_instances} node{util.optional_s(count_instances)} have started")
+    print(f"{count_instances} node{util.optional_s(count_instances)} have started")
     async with server:
         await server.serve_forever() 
           
