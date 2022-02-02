@@ -6,6 +6,8 @@ import util
 NODE_BACKUP_HISTORY: Final = 1
 NODE_DIRECTORY_FILE: Final = "node_directory.json"
 DEFAULT_HASH: Final = "007"
+RESULT_GOOD: Final = "GOOD"
+RESULT_BAD: Final = "BAD"
 
 class NodeDirectory:
 
@@ -67,7 +69,7 @@ class NodeDirectory:
 
     def get_hashes_for_challenges(self, checkpoint_list):
         return [(checkpoint,self.get_hash(checkpoint)) for checkpoint in checkpoint_list]
-        
+
     def get_host_and_port(self, identifier):
         node_info = self.node_directory[str(identifier)]
         return (node_info['host'], node_info['port'])
@@ -109,3 +111,14 @@ class NodeDirectory:
         if self.has_checkpoint(node.checkpoint):
             entry = self.node_directory.get(node.checkpoint)
             node.status = entry.status
+
+    def validate_hashes(self, challenge_id, answer):
+        print(f"\nvalidate_hashes: challenge_id: {challenge_id}, answer: {answer}")
+        checkpoints = self.challenges[str(challenge_id)]
+        for checkpoint, hash in answer:
+            if not checkpoint in checkpoints:
+                return RESULT_BAD
+            node_info = self.node_directory[str(checkpoint)]
+            if hash != node_info['hash']:
+                return RESULT_BAD
+        return RESULT_GOOD

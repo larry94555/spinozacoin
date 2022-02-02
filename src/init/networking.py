@@ -1,5 +1,5 @@
 import command
-from typing import Final
+from handle_challenge import HandleChallenge
 from handle_request import HandleRequest
 from handle_response import HandleResponse
 from listener import Listener
@@ -12,6 +12,7 @@ class Networking:
         self.node = node
         self.handle_request = HandleRequest(self)
         self.handle_response = HandleResponse(self)
+        self.handle_challenge = HandleChallenge(self)
         self.SPINOZA_COIN_PREFIX: Final = b'\x02\x03\x05\x07'
         self.SPINOZA_COIN_SUFFIX: Final = b'\x07\x07\x07\x07'
         self.PREFIX_SIZE: Final = len(self.SPINOZA_COIN_PREFIX)

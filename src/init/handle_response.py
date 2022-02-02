@@ -1,4 +1,4 @@
-from challenge import Challenge
+from challenge_answer import ChallengeAnswer
 import asyncio
 import command
 import node
@@ -84,19 +84,18 @@ class HandleResponse:
         challenge_id = response['challenge_id']
         checkpoint_list = response['checkpoint_list'] 
         result=self.networking.node.directory.get_hashes_for_challenges(checkpoint_list)
-        print(f"challenge_id: {challenge_id}, checkpoint_list: {checkpoint_list}, hashes: {result}")
         payload_json = {
             "action_type": command.READY_TO_JOIN,
             "challenge_id": challenge_id,
-            "challenge_response": result
+            "answer": result
         }
-        challenge = Challenge(
+        challenge_answer = ChallengeAnswer(
             transport = transport,
             networking = self.networking,
-            identifier = self.networking.get_identifier(),
+            identifier = self.networking.node.get_public_key_value(),
             payload_json = payload_json
         )
-        challenge.send()
+        challenge_answer.send()
 
     async def handle_nominate_checkpoints_response(self, response_json, transport):
         pass

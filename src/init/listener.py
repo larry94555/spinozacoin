@@ -1,5 +1,5 @@
-from answer_to_challenge import AnswerToChallenge
 import asyncio
+from challenge_result import ChallengeResult
 from request import Request
 from response import Response
 import json
@@ -38,17 +38,20 @@ class Listener:
                 payload_json = response_json
             )
             response.respond()
-            challenge_received = await reader.readuntil(self.networking.SPINOZA_COIN_SUFFIX)
-            print(f"\nRequestHandler (part 2): handle_connection: Received: {challenge_received}")
+            challenge_answer_received = await reader.readuntil(self.networking.SPINOZA_COIN_SUFFIX)
+            print(f"\nRequestHandler: handle_connection: challenge_answer_received: handle_connection: Received: {challenge_answer_received}")
             # validate answer to challenge
-            answerToChallenge = AnswerToChallenge(
+            answer_encoded = challenge_answer_received[self.networking.PREFIX_SIZE:-self.networking.SUFFIX_SIZE].decode()
+            answer_json = json.loads(answer_encoded)
+            challenge_result = ChallengeResult(
                 reader = reader,
                 writer = writer,
                 networking = self.networking,
                 identifier = self.networking.get_identifier(),
-                payload_json = response_json
+                payload_json = self.networking.handle_challenge.get_result(answer_json)
             )
-            answerToChallenge.evaluate()
+            challenge_result.send()
+            
             
         except Exception as e:
             print(f"hit issue parsing action with error: {e}")

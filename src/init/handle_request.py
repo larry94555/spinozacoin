@@ -1,5 +1,4 @@
 import command
-from typing import Final
 import util
 
 class HandleRequest:
