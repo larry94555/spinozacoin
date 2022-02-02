@@ -6,9 +6,8 @@ class Response:
     def __init__(self, reader, writer, networking, identifier, payload_json):
         self.reader = reader
         self.writer = writer
-        timestamp = util.utc_timestamp()
         response_json = {
-            "timestamp": timestamp,
+            "timestamp": util.utc_timestamp(),
             "response": payload_json
         }
         self.message = Message(networking, identifier, response_json)

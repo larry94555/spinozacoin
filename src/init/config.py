@@ -2,6 +2,9 @@ from typing import Final
 import os
 import util
 
+# Default values
+DEFAULT_NUM_NODES_RETURNED_PER_REQUEST: Final = 50
+
 # Fields of config file
 INSTANCE_BASE_PATH : Final = "instance_base_path"
 HOST : Final = "host"
@@ -11,6 +14,7 @@ TRUSTED_PORT : Final = "trusted_port"
 COUNT_INSTANCES : Final = "count_instances"
 COUNT_DEAD_INSTANCES : Final = "count_dead_instances"
 COUNT_UNRELIABLE_INSTANCES : Final = "count_unreliable_instances"
+NUM_NODES_RETURNED_PER_REQUEST: Final = "num_nodes_returned_per_request"
 LOGGING_LEVEL : Final = "logging_level"
 
 requiredFields = ( 
@@ -25,7 +29,6 @@ requiredFields = (
     LOGGING_LEVEL 
 )
 
-
 class Config:
 
     def __init__(self, yaml_file):
@@ -37,6 +40,8 @@ class Config:
             if property not in config:
                 print(f"A required property in the configuration file is missing: {property}")
                 exit()
+        if NUM_NODES_RETURNED_PER_REQUEST in config and int(config[NUM_NODES_RETURNED_PER_REQUEST]) < DEFAULT_NUM_NODES_RETURNED_PER_REQUEST:
+            print(f"{NUM_NODES_RETURNED_PER_REQUEST} must be at least 50")
 
     def get_instance_base_path(self):
         return os.path.expanduser(self.config[INSTANCE_BASE_PATH])
@@ -61,6 +66,9 @@ class Config:
 
     def get_count_unreliable_instances(self):
         return self.config[COUNT_UNRELIABLE_INSTANCES]
+
+    def get_num_nodes_returned_per_request(self):
+        return int(self.config.get(NUM_NODES_RETURNED_PER_REQUEST, DEFAULT_NUM_NODES_RETURNED_PER_REQUEST))
 
     def get_logging_level(self):
         return self.config[LOGGING_LEVEL]

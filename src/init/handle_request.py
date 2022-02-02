@@ -2,8 +2,6 @@ import command
 from typing import Final
 import util
 
-NUM_NODES_RETURNED: Final = 100
-
 class HandleRequest:
 
     def __init__(self, networking):
@@ -40,12 +38,13 @@ class HandleRequest:
         latest_checkpoint = self.networking.node.directory.size()
         start_pos = util.random_position(latest_checkpoint)
         step = util.random_step(latest_checkpoint)
+        num_nodes = self.networking.node.config.get_num_nodes_returned_per_request()
         return {
             "action_type": command.ANNOUNCE_NODE,
             "checkpoint": latest_checkpoint,
             "start": start_pos,
             "step": step,
-            "next_n_nodes": self.networking.node.directory.up_to_n(NUM_NODES_RETURNED, start_pos, step, 0, latest_checkpoint)
+            "next_n_nodes": self.networking.node.directory.up_to_n(num_nodes, start_pos, step, 0, latest_checkpoint)
         }
 
     def handle_uptake_checkpoints(self, request_json):
@@ -58,7 +57,16 @@ class HandleRequest:
         pass
 
     def handle_ready_to_join(self, request_json):
-        pass
+        print(f"\nhandle_ready_to_join: request_json: {request_json}")
+        # generate a list of checkpoints to check
+        n = self.networking.node.config.get_num_nodes_returned_per_request()
+        checkpoints = self.networking.node.directory.generate_random_up_to_n_checkpoints(n)
+        self.challenge_id = self.networking.node.directory.get_challenge_id(checkpoints)
+        return {
+            "action_type": command.READY_TO_JOIN,
+            "challenge_id": self.challenge_id,
+            "checkpoint_list": checkpoints
+        }
     
     def handle_nominate_checkpoints(self, request_json):
         pass

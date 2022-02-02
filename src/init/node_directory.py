@@ -1,5 +1,6 @@
 from typing import Final
 import os
+import random
 import util
 
 NODE_BACKUP_HISTORY: Final = 1
@@ -13,6 +14,7 @@ class NodeDirectory:
             util.create_directory_if_needed(instance_path)
         self.node_file = f"{instance_path}/{NODE_DIRECTORY_FILE}" 
         self.node_directory = util.read_dict_from_file(self.node_file) if os.path.exists(self.node_file) else {}
+        self.challenges = {}
 
     def add_node(self, node):
         self.node_directory[node.checkpoint] = self.get_node_info(node)
@@ -41,11 +43,30 @@ class NodeDirectory:
         for i in range(len(self.node_directory)):
             self.set_hash_value(i+1, self.generate_hash(i+1))
 
+    def generate_random_up_to_n_checkpoints(self, n):
+         
+        if n >= len(self.node_directory):
+            # Return all
+            print(f"Return all checkpoints")
+            return [(i+1) for i in range(len(self.node_directory))]
+        else:
+            # randomly select n
+            print(f"Randomly pick n items")
+            return random.sample(range(1,len(self.node_directory)+1),n)
+
+    def get_challenge_id(self, checkpoints):
+        challenge_id = len(self.challenges) + 1
+        self.challenges[str(challenge_id)] = checkpoints
+        return challenge_id
+
     def get_hash(self, checkpoint):
         if (node_info := self.node_directory.get(str(checkpoint),None)) != None:
             return node_info.get("hash", "no hash")          
         else:
             return f"Node not found for checkpoint: {checkpoint}"
+
+    def get_hashes_for_challenges(self, checkpoint_list):
+        return [(checkpoint,self.get_hash(checkpoint)) for checkpoint in checkpoint_list]
         
     def get_host_and_port(self, identifier):
         node_info = self.node_directory[str(identifier)]

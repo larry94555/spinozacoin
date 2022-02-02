@@ -1,9 +1,9 @@
 import command
+from typing import Final
 from handle_request import HandleRequest
 from handle_response import HandleResponse
+from listener import Listener
 from request import Request
-from request_handler import RequestHandler
-from typing import Final
 import util
 
 class Networking:
@@ -42,16 +42,35 @@ class Networking:
         )
         return await request.send_to(destination_host, destination_port)
 
-    async def ready_to_join(self):
-        print(f"networking: ready_to_join...")
+    async def ready_to_join(self, destination_host, destination_port):
+        result = None
+        try:
+            request = Request(
+                networking=self,
+                identifier = self.node.get_public_key_value(),
+                action_json = {
+                    "action_type": command.READY_TO_JOIN,
+                    "host": self.node.host,
+                    "port": self.node.port
+                }
+            )
+            print(f"\nnetworking ready_to_join: destination_host: {destination_host}, destination_port: {destination_port}")
+            print(f"request: {request.message.get_encoded_payload()}")
+            result=await request.send_to(destination_host, destination_port)
+        except Exception as e:
+            print(f"Exception hit: {e}")
+        return result
 
     async def resolve_source_inconsistency(self):
         print(f"networking: resolve source inconsistency")
+
+    async def uptake_checkpoints(self):
+        print(f"networking: uptake checkpoints")
 
     def get_identifier(self):
         return self.node.checkpoint
 
     async def listen(self):
         print(f"\nlisten: port: {self.node.port}")
-        request_handler = RequestHandler(self)
-        return await request_handler.run() 
+        listener = Listener(self)
+        return await listener.run() 

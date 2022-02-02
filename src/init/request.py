@@ -27,7 +27,7 @@ class RequestClientProtocol(asyncio.Protocol):
 
             response_encoded = data_received[self.request.networking.PREFIX_SIZE:-self.request.networking.SUFFIX_SIZE].decode()
             response_json = json.loads(response_encoded)
-            task=asyncio.create_task(self.request.networking.handle_response.run(response_json))
+            task=asyncio.create_task(self.request.networking.handle_response.run(response_json, self.request.transport))
  
         except Exception as e:
             print(f"hit issue parsing action with error: {e}") 
@@ -56,15 +56,17 @@ class Request:
         return util.increase_and_return_value(self.networking.node.get_instance_path(), SEQUENCE_ID_FILE)
 
     async def send_to(self, destination_host, destination_port):
-        print(f"\nrequest: send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}")
+        print(f"request send_to", flush=True)
         # build
         try:
+            print(f"\nrequest: send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}", flush=True)
             # Create connection per request
             print(f"\ncreate_connection: host: {destination_host}, port: {destination_port}")
             transport, protocol = await self.networking.node.loop.create_connection(lambda: RequestClientProtocol(self, self.networking.node.loop), host=destination_host, port = destination_port)
             # This should be a command such as #send_node_info
             print(f"\nrequest: sending message: {self.message.get_encoded_payload()}")
             transport.write(self.message.get_encoded_payload())
+            self.transport = transport
             
         except Exception as e:
             print(f"Connection to {destination_host}:{destination_port} failed with error: {e}")

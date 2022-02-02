@@ -1,9 +1,10 @@
+from answer_to_challenge import AnswerToChallenge
 import asyncio
 from request import Request
 from response import Response
 import json
 
-class RequestHandler:
+class Listener:
 
     def __init__(self, networking):
         self.networking = networking
@@ -37,6 +38,17 @@ class RequestHandler:
                 payload_json = response_json
             )
             response.respond()
+            challenge_received = await reader.readuntil(self.networking.SPINOZA_COIN_SUFFIX)
+            print(f"\nRequestHandler (part 2): handle_connection: Received: {challenge_received}")
+            # validate answer to challenge
+            answerToChallenge = AnswerToChallenge(
+                reader = reader,
+                writer = writer,
+                networking = self.networking,
+                identifier = self.networking.get_identifier(),
+                payload_json = response_json
+            )
+            answerToChallenge.evaluate()
             
         except Exception as e:
             print(f"hit issue parsing action with error: {e}")
