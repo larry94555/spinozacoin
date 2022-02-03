@@ -16,10 +16,17 @@ class NodeDirectory:
             util.create_directory_if_needed(instance_path)
         self.node_file = f"{instance_path}/{NODE_DIRECTORY_FILE}" 
         self.node_directory = util.read_dict_from_file(self.node_file) if os.path.exists(self.node_file) else {}
+        self.node_candidates = {}
+        self.nominations = set()
         self.challenges = {}
 
-    def add_node(self, node):
-        self.node_directory[node.checkpoint] = self.get_node_info(node)
+    def add_candidate_to_nominations(self, identifier):
+        self.nominations.add(identifier)
+
+    def add_checkpoint(self, node_list, base_checkpoint):
+        for i, node in enumerate(sorted(node_list, key=lambda x: f"{x.host}:{x.port}")):
+            node.checkpoint = base_checkpoint + i + 1
+            self.add_node(node)
 
     def add_next_n_nodes(self, source, node_info_list):
         for node_info in node_info_list:
@@ -27,10 +34,11 @@ class NodeDirectory:
             self.node_directory[str(node_info['checkpoint'])] = node_info
         self.persist()
 
-    def add_checkpoint(self, node_list, base_checkpoint):
-        for i, node in enumerate(sorted(node_list, key=lambda x: f"{x.host}:{x.port}")):
-            node.checkpoint = base_checkpoint + i + 1
-            self.add_node(node)
+    def add_node(self, node):
+        self.node_directory[node.checkpoint] = self.get_node_info(node)
+
+    def add_node_candidate(self, public_key, node_info):
+        self.node_candidates[public_key] = node_info
 
     def generate_hash(self, checkpoint_int):
         current_node = self.node_directory[str(checkpoint_int)]
@@ -73,6 +81,13 @@ class NodeDirectory:
     def get_host_and_port(self, identifier):
         node_info = self.node_directory[str(identifier)]
         return (node_info['host'], node_info['port'])
+
+    def get_node_candidate_info(self, identifier):
+        return self.node_candidates[identifier]
+
+    def get_next_n_nodes(self, starting_item, size, step, num_nodes_returned):
+        print(f"\nget_next_next_node: starting_item: {starting_item}, size: {size}, step: {step}, num_nodes_returned: {num_nodes_returned}")
+         
             
     def get_node_info(self, node):
         return {
@@ -83,8 +98,14 @@ class NodeDirectory:
             "status": node.status
         }
 
+    def get_number_of_nodes(self):
+        return len(self.node_directory)
+
     def has_checkpoint(self, checkpoint):
         return checkpoint in self.node_directory
+
+    def nominee_count(self):
+        return len(self.nominations)
 
     def size(self):
         return len(self.node_directory)
@@ -102,6 +123,18 @@ class NodeDirectory:
     def persist(self):
         util.backup_file(self.node_file,NODE_BACKUP_HISTORY)
         util.write_dict_to_file(self.node_directory, self.node_file) 
+
+    def promote_nominations(self):
+        checkpoint_base = len(self.node_directory) + 1
+        for i,public_key in enumerate(sorted(self.nominations)):
+            node_info = self.node_candidates[public_key]
+            node_info['checkpoint'] = i+checkpoint_base
+            node_info['status'] = "up"
+            print(f"\npromote_nominations: i={i}, public_key={public_key}, node_info={node_info}")
+            self.node_candidates.pop(public_key)
+            self.node_directory[str(i+checkpoint_base)] = node_info
+        #self.persist()
+            
 
     def set_hash_value(self, checkpoint, hash):
         node_info = self.node_directory[str(checkpoint)] 

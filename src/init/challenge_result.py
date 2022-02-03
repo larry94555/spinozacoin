@@ -8,7 +8,7 @@ class ChallengeResult:
         self.writer = writer
         challenge_result_json = {
             "timestamp": util.utc_timestamp(),
-            "result": payload_json
+            "response": payload_json
         }
         self.message = Message(networking, identifier, challenge_result_json)
 

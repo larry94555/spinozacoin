@@ -68,6 +68,21 @@ class Networking:
     async def uptake_checkpoints(self):
         print(f"networking: uptake checkpoints")
 
+    async def validate_nominations(self, nominee_count):
+        print(f"\nvalidate_nominations: nominee_count: {nominee_count}")
+        if self.node.directory.nominee_count() == nominee_count:
+            try:
+                print(f"Proceeding with validation...")
+                self.node.directory.promote_nominations()
+                size = self.node.directory.get_number_of_nodes()
+                step = util.random_step(size)
+                # iterate through n items
+                print(f"Iterate through n items")
+            except Exception as e:
+                print(f"validate_nominations: hit exception: {e}")
+        else:
+            print(f"Discrepancy found: nominees found: {self.node.directory.nominee_count()}")
+
     def get_identifier(self):
         return self.node.checkpoint
 

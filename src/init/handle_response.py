@@ -1,5 +1,5 @@
-from challenge_answer import ChallengeAnswer
 import asyncio
+from challenge_answer import ChallengeAnswer
 import command
 import node
 
@@ -22,10 +22,11 @@ class HandleResponse:
             command.VALIDATE_CHECKPOINTS: self.handle_validate_checkpoints_response,
             command.NODE_UPDATE: self.handle_node_update_response,
             command.CHECK_HASH: self.handle_check_hash_response,
-            command.COMPROMISED: self.handle_compromised_response
+            command.COMPROMISED: self.handle_compromised_response,
+            command.SEND_CHALLENGE_RESULT: self.handle_send_challenge_result_response
         }
-        action = response_json['body']['response']['action_type']
         try:
+            action = response_json['body']['response']['action_type']
             await response_handler[action](response_json, transport)
         except Exception as e:
             print(f"HandleResponse: run: hit exception: {e}")
@@ -124,3 +125,5 @@ class HandleResponse:
     async def handle_compromised_response(self, response_json, transport):
         pass
         
+    async def handle_send_challenge_result_response(self, response_json, transport):
+        print(f"\nhandle_send_challenge_result")

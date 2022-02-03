@@ -1,3 +1,4 @@
+import asyncio
 import command
 import node_directory
 import util
@@ -30,9 +31,28 @@ class HandleChallenge:
         )
         if result == node_directory.RESULT_GOOD:
             print(f"\nhandle_ready_to_join_challenge: Starting the nomination process to assign checkpoint to new node...")
+            identifier = result_json['identifier']
+            node_info = self.networking.node.directory.get_node_candidate_info(identifier)
+            print(f"\nhandle_ready_to_join_challenge: nominate_nodes: node_info: {node_info}")
+
+            # begin nomination process
+            self.networking.node.close_nominations()
+            self.networking.node.directory.add_candidate_to_nominations(identifier)
+            size = self.networking.node.directory.get_number_of_nodes()
+            step = util.random_step(size)
+            volume = 1
+            
+            if volume == size:
+                # begin validation process
+                print(f"\nhandle_ready_to_join_challenge: validating nominations...")
+                asyncio.create_task(self.networking.validate_nominations(self.networking.node.directory.nominee_count()))
+            else:
+                print(f"\nhandle_ready_to_join_challenge: volume: {volume}, size: {size}")
+            
+                
         else:
             print(f"\nhandle_ready_to_join_challenge: failed ready_to_join")
         return {
-            "action_type": command.READY_TO_JOIN,
-            "result": result
+            "action_type": command.SEND_CHALLENGE_RESULT,
+            "response": result
         }

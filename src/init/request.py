@@ -56,10 +56,8 @@ class Request:
         return util.increase_and_return_value(self.networking.node.get_instance_path(), SEQUENCE_ID_FILE)
 
     async def send_to(self, destination_host, destination_port):
-        print(f"request send_to", flush=True)
-        # build
         try:
-            print(f"\nrequest: send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}", flush=True)
+            print(f"\nrequest: send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}")
             # Create connection per request
             print(f"\ncreate_connection: host: {destination_host}, port: {destination_port}")
             transport, protocol = await self.networking.node.loop.create_connection(lambda: RequestClientProtocol(self, self.networking.node.loop), host=destination_host, port = destination_port)

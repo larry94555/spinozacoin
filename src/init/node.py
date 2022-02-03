@@ -27,9 +27,13 @@ class Node:
         self.loop = loop
         self.checkpoint = None
         self.status = None
+        self.open_to_nominations = True
         self.networking = Networking(self)
         self.directory = NodeDirectory(self.get_instance_path())
         self.try_to_set_node_info()
+
+    def close_nominations(self):
+        self.open_to_nominations = False
 
     def create_secrets(self, private_key_file, public_key_file):
         serialized_private_key, serialized_public_key = util.generate_private_and_public_keys()
@@ -89,6 +93,9 @@ class Node:
     async def join_network(self):
         self.initialize()
         return await self.start_node()
+
+    def open_nominations(self):
+        self.open_to_nominations = True
 
     def persist(self):
         if self.checkpoint != None:

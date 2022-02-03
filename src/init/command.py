@@ -31,4 +31,5 @@ CHECK_HASH: Final = "check_hash"
 # 10.  COMPROMISED: initiate a broadcast that a private key has been compromised
 # Can only be sent by a node that has the private key
 COMPROMISED: Final = "compromised"
-
+# 11. SEND_CHALLENGE_RESULT: forward result status after a challenge
+SEND_CHALLENGE_RESULT: Final = "send_challenge_result"

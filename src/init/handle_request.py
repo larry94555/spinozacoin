@@ -9,7 +9,7 @@ class HandleRequest:
 
     def get_response(self, request_json):
 
-        print(f"\nHandleRequest: get_response: request_json: {request_json}", flush=True)
+        print(f"\nHandleRequest: get_response: request_json: {request_json}")
 
         command_handler = {
             command.ANNOUNCE_NODE: self.handle_announce_node,
@@ -33,7 +33,7 @@ class HandleRequest:
     # 2. offset
     # 3. step
     def handle_announce_node(self, request_json):
-        print(f"handle_announce_node: request_json: {request_json}", flush=True)
+        print(f"handle_announce_node: request_json: {request_json}")
         latest_checkpoint = self.networking.node.directory.size()
         start_pos = util.random_position(latest_checkpoint)
         step = util.random_step(latest_checkpoint)
@@ -61,6 +61,13 @@ class HandleRequest:
         n = self.networking.node.config.get_num_nodes_returned_per_request()
         checkpoints = self.networking.node.directory.generate_random_up_to_n_checkpoints(n)
         self.challenge_id = self.networking.node.directory.get_challenge_id(checkpoints)
+        action = request_json['body']['action'] 
+        node_info = {
+            "public_key": request_json['identifier'],
+            "host": action['host'],
+            "port": action['port']
+        }
+        self.networking.node.directory.add_node_candidate(request_json['identifier'], node_info)
         return {
             "action_type": command.READY_TO_JOIN,
             "challenge_id": self.challenge_id,
