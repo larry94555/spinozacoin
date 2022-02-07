@@ -24,7 +24,7 @@ NOMINATE_CHECKPOINTS: Final = "nominate_checkpoints"
 # 7. VALIDATE_CHECKPOINT: Once a node receives a NOMINATE_NODE where size = size, then the node proceeds to VALIDATE_CHECKPOINT which includes offset, checkpoint, size
 VALIDATE_CHECKPOINTS: Final = "validate_checkpoints"
 # 8. NODE_UPDATE: either change public alias or come back after being down.  It still needs to go through a validate_checkpoint to be accepted back in.
-NODE_UPDATE: Final = "node_update"
+NODE_UP: Final = "node_up"
 # 9. CHECK_HASH: send out a checkpoint and hash to validate it is consistent
 # A node send out a checkpoint and a hash.  The node sends back either OK or BAD signed
 CHECK_HASH: Final = "check_hash"
@@ -33,3 +33,5 @@ CHECK_HASH: Final = "check_hash"
 COMPROMISED: Final = "compromised"
 # 11. SEND_CHALLENGE_RESULT: forward result status after a challenge
 SEND_CHALLENGE_RESULT: Final = "send_challenge_result"
+# 12. BROADCAST: send out a message to all "up" nodes
+BROADCAST: Final = "broadcast"

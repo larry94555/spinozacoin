@@ -35,21 +35,7 @@ class HandleChallenge:
             node_info = self.networking.node.directory.get_node_candidate_info(identifier)
             print(f"\nhandle_ready_to_join_challenge: nominate_nodes: node_info: {node_info}")
 
-            # begin nomination process
-            self.networking.node.close_nominations()
-            self.networking.node.directory.add_candidate_to_nominations(identifier)
-            size = self.networking.node.directory.get_number_of_nodes()
-            step = util.random_step(size)
-            volume = 1
-            
-            if volume == size:
-                # begin validation process
-                print(f"\nhandle_ready_to_join_challenge: validating nominations...")
-                asyncio.create_task(self.networking.validate_nominations(self.networking.node.directory.nominee_count()))
-            else:
-                print(f"\nhandle_ready_to_join_challenge: volume: {volume}, size: {size}")
-            
-                
+            asyncio.create_task(self.networking.nominate_nodes(identifier))
         else:
             print(f"\nhandle_ready_to_join_challenge: failed ready_to_join")
         return {

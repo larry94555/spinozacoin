@@ -6,6 +6,7 @@ import os
 import util
 
 CHECKPOINT_FILENAME: Final = "checkpoint.txt"
+BROADCAST_ID_FILE: Final = "broadcast_sequence_id.txt"
 
 # Status values
 STATUS_NEW: Final = "new"
@@ -13,6 +14,10 @@ STATUS_DOWN: Final = "down"
 STATUS_UP: Final = "up"
 STATUS_UNRELIABLE: Final = "unreliable"
 
+# To Do
+# 
+# 1.  Change checkpoint to node_id
+#
 class Node:
 
     # status:  None (initialization)
@@ -30,7 +35,13 @@ class Node:
         self.open_to_nominations = True
         self.networking = Networking(self)
         self.directory = NodeDirectory(self.get_instance_path())
+        self.broadcasts = {}
         self.try_to_set_node_info()
+
+    def add_broadcast(self, identifier, broadcast, broadcast_context):
+        if identifier not in self.broadcasts:
+            self.broadcasts[identifier] = broadcast
+            broadcast_context.increase_count() 
 
     def close_nominations(self):
         self.open_to_nominations = False
@@ -40,8 +51,14 @@ class Node:
         util.write_bytes_to_file(serialized_private_key, private_key_file)
         util.write_bytes_to_file(serialized_public_key, public_key_file)
 
+    def get_next_broadcast_id(self):
+        return util.increase_and_return_value(self.get_instance_path(), BROADCAST_ID_FILE)
+
     def get_checkpoint_file(self):
         return f"{self.get_instance_path()}/{CHECKPOINT_FILENAME}"
+
+    def get_id(self):
+        return node.checkpoint
 
     def get_instance_path(self):
         return f"{self.config.get_instance_base_path()}/instance{self.instance_id}"
@@ -101,11 +118,30 @@ class Node:
         if self.checkpoint != None:
             util.write_num_to_file(self.checkpoint, self.get_checkpoint_file())
 
+    # There are three paths to starting a node:
+    # 1. Node is new and needs to register
+    #    * Announce Node  (New Node -> Trusted Node -> Starter Network Info)
+    #    * Announce Node  (New Node -> Network Nodes -> Additional Network Info)
+    #    * Ready to Join  (New Node -> Trusted Node -> Challenge -> Answer)
+    #    * Broadcast Nominate (Trusted Node -> Registered Nodes)
+    #    * Broadcast Validate (Network Node -> Registered Nodes including nominated nodes)
+    # 2. Node is registered but has been down
+    #    * Node Up (Registered Node -> Trusted Node -> Starter Network Info)
+    #    * Ready to Join (Registered Node -> Network Nodes -> Additional Network Info)
+    # 3. First node which can be used for a test environment
+    #    * No messages needed.  node_id is 1.  Node Directory of 1 entry is persisted.
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
-            self.status=STATUS_NEW if self.checkpoint == None else STATUS_DOWN
-            await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
+            if self.checkpoint == None:
+                print(f"\nAdding new node to p2p network...")
+                self.status=STATUS_NEW
+                await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
+            else:
+                print(f"\nRegistered node coming back up...")
+                self.status=STATUS_DOWN 
+                await self.networking.node_back_up(self.config.get_trusted_node(), self.config.get_trusted_port())
         else:
+            print(f"\nStarting first node...")
             self.handle_first_node()
         print(f"\nstart_node: port: {self.port}, status: {self.status}")
 

@@ -12,9 +12,15 @@ import random
 from tinyec import registry
 import secrets
 from cryptography.hazmat.primitives import serialization
+from datetime import timedelta
 from datetime import timezone
 import urllib.request
 import yaml
+
+
+# TO DO
+# 
+# 1. Consider dropping timestamp and using datetime directly
 
 CURVE : Final = ec.SECP256K1()
 SIGNATURE_ALGORITHM : Final = ec.ECDSA(hashes.SHA256())
@@ -90,6 +96,8 @@ def increase_and_return_value(path, filename):
         write_num_to_file(num, file_with_path)
         return num
 
+def is_earlier_than(timestamp1, timestamp2):
+    return fromtimestamp(timestamp1) < fromtimestamp(timestamp2)
 
 def load_public_key():
     return None
@@ -129,10 +137,22 @@ def read_yaml(yamlFile):
             print(exc)
             return None
 
+def seconds_ago(seconds):
+    dt=now(timezone.utc) - timedelta(seconds=seconds)
+    return dt.timestamp()
+
 def utc_timestamp():
     dt = datetime.datetime.now(timezone.utc)
-    utc_time = dt.replace(tzinfo=timezone.utc)
-    return utc_time.timestamp()
+    return dt.timestamp()
+
+def validate_signature(public_key, signature, json_string):
+    try:
+        signature_algorithm = ec.ECDSA(hashes.SHA256())
+        public_key.verify(signature, json_string, signature_algorithm)
+    except InvalidSignature as e:
+        print(f"Invalid: exception: {e}")
+        return False
+    return True
 
 def write_bytes_to_file(bytes, file_with_path):
     with open(f"{file_with_path}", "wb") as byte_file:

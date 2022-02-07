@@ -69,6 +69,9 @@ class NodeDirectory:
         self.challenges[str(challenge_id)] = checkpoints
         return challenge_id
 
+    def get_current_nominations(self):
+        return [self.node_candidates[identifier] for identifier in self.nominations if identifier in self.node_candidates]
+
     def get_hash(self, checkpoint):
         if (node_info := self.node_directory.get(str(checkpoint),None)) != None:
             return node_info.get("hash", "no hash")          

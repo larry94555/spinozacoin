@@ -20,14 +20,16 @@ class HandleResponse:
             command.READY_TO_JOIN: self.handle_ready_to_join_response,
             command.NOMINATE_CHECKPOINTS: self.handle_nominate_checkpoints_response,
             command.VALIDATE_CHECKPOINTS: self.handle_validate_checkpoints_response,
-            command.NODE_UPDATE: self.handle_node_update_response,
+            command.NODE_UP: self.handle_node_up_response,
             command.CHECK_HASH: self.handle_check_hash_response,
             command.COMPROMISED: self.handle_compromised_response,
-            command.SEND_CHALLENGE_RESULT: self.handle_send_challenge_result_response
+            command.SEND_CHALLENGE_RESULT: self.handle_send_challenge_result_response,
+            command.BROADCAST: self.handle_broadcast_response
         }
         try:
-            action = response_json['body']['response']['action_type']
-            await response_handler[action](response_json, transport)
+            response = response_json['body']['response']
+            action_type = response['action_type']
+            await response_handler[action_type](response_json, transport, response)
         except Exception as e:
             print(f"HandleResponse: run: hit exception: {e}")
 
@@ -36,10 +38,9 @@ class HandleResponse:
     # 3. If all goes well, then send out ready_to_join
     # 4. If all does not go well, identify problem source, add source to list of untrusted, continue update from where left off
     # 5. If not complete, then send out request to next node on list and repeat with step 1.
-    async def handle_announce_node_response(self, response_json, transport):
+    async def handle_announce_node_response(self, response_json, transport, response):
         print(f"\nhandle_announce_node_response: {response_json}")
         source=response_json['identifier']
-        response=response_json['body']['response']
         
         #Add values returned to node_directory
         total_nodes = response['checkpoint']
@@ -70,16 +71,16 @@ class HandleResponse:
         # if validation is not successful and there are no alternative sources, return saying that the network is down, check with spinozacoin.org for details on when it will be back up
         
 
-    async def handle_uptake_checkpoints_response(self, response_json, transport):
+    async def handle_uptake_checkpoints_response(self, response_json, transport, response):
         pass
    
-    async def handle_node_down_response(self, response_json, transport):
+    async def handle_node_down_response(self, response_json, transport, response):
         pass
 
-    async def handle_node_unreliable_response(self, response_json, transport):
+    async def handle_node_unreliable_response(self, response_json, transport, response):
         pass
 
-    async def handle_ready_to_join_response(self, response_json, transport):
+    async def handle_ready_to_join_response(self, response_json, transport, response):
         print(f"\nhandle_ready_to_join_response: {response_json}")
         response = response_json['body']['response']
         challenge_id = response['challenge_id']
@@ -98,18 +99,18 @@ class HandleResponse:
         )
         challenge_answer.send()
 
-    async def handle_nominate_checkpoints_response(self, response_json, transport):
+    async def handle_nominate_checkpoints_response(self, response_json, transport, response):
         pass
 
-    async def handle_validate_checkpoints_response(self, response_json, transport):
+    async def handle_validate_checkpoints_response(self, response_json, transport, response):
         pass
 
-    async def handle_node_update_response(self, response_json, transport):
+    async def handle_node_up_response(self, response_json, transport, response):
         pass
 
-    async def handle_check_hash_response(self, response_json, transport):
+    async def handle_check_hash_response(self, response_json, transport, response):
         print(f"\nhandle_check_hash_response: {response_json}")
-        result = response_json['body']['response']['result']
+        result = response['result']
         checkpoint = response_json['body']['response']['checkpoint']
         print(f"result: {result}, node status: {self.networking.node.status}, checkpoint: {checkpoint}")
         if self.networking.node.status == node.STATUS_NEW and result == "GOOD":
@@ -122,8 +123,12 @@ class HandleResponse:
                 asyncio.create_task(self.networking.resolve_source_inconsistency())
         #return (checkpoint, result)
 
-    async def handle_compromised_response(self, response_json, transport):
+    async def handle_compromised_response(self, response_json, transport, response):
         pass
         
-    async def handle_send_challenge_result_response(self, response_json, transport):
+    async def handle_send_challenge_result_response(self, response_json, transport, response):
         print(f"\nhandle_send_challenge_result")
+
+    async def handle_broadcast_response(self, response_json, transport, response):
+        print(f"\nhandle_broadcast_response: response_json: {response_json}")
+        

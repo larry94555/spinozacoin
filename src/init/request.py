@@ -5,7 +5,7 @@ import json
 from message import Message
 import util
 
-SEQUENCE_ID_FILE: Final = "sequence_id.txt"
+REQUEST_SEQUENCE_ID_FILE: Final = "request_sequence_id.txt"
 
 class RequestClientProtocol(asyncio.Protocol):
     def __init__(self, request, loop):
@@ -53,7 +53,7 @@ class Request:
         self.message = Message(networking, identifier, request_body)
 
     def next_id(self):
-        return util.increase_and_return_value(self.networking.node.get_instance_path(), SEQUENCE_ID_FILE)
+        return util.increase_and_return_value(self.networking.node.get_instance_path(), REQUEST_SEQUENCE_ID_FILE)
 
     async def send_to(self, destination_host, destination_port):
         try:
