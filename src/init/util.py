@@ -86,7 +86,7 @@ def get_signature_for_json(private_key, json_string):
 
 def increase_and_return_value(path, filename):
     file_with_path=f"{path}/{filename}"
-    print(f"file with path: {file_with_path}")
+    print(f"\nutil file with path: {file_with_path}")
     if not os.path.exists(file_with_path):
         write_num_to_file(1, file_with_path)
         return 1

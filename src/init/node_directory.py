@@ -57,11 +57,11 @@ class NodeDirectory:
          
         if n >= len(self.node_directory):
             # Return all
-            print(f"Return all checkpoints")
+            print(f"\nNodeDirectory: generate_random_up_to_n_checkponts: return all checkpoints")
             return [(i+1) for i in range(len(self.node_directory))]
         else:
             # randomly select n
-            print(f"Randomly pick n items")
+            print(f"\nNodeDirectory: generate_random_up_to_n_checkponts: randomly pick n={n} items")
             return random.sample(range(1,len(self.node_directory)+1),n)
 
     def get_challenge_id(self, checkpoints):
@@ -149,7 +149,7 @@ class NodeDirectory:
             node.status = entry.status
 
     def validate_hashes(self, challenge_id, answer):
-        print(f"\nvalidate_hashes: challenge_id: {challenge_id}, answer: {answer}")
+        print(f"\nNodeDirectory: validate_hashes: challenge_id: {challenge_id}, answer: {answer}")
         checkpoints = self.challenges[str(challenge_id)]
         for checkpoint, hash in answer:
             if not checkpoint in checkpoints:

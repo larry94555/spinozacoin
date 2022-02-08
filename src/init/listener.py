@@ -11,14 +11,12 @@ class Listener:
 
     async def handle_connection(self, reader, writer):
         # wait for message - nned to constrain by size
-        print(f"\nRequestHandler: handle_connection: ")
         try:
             client_w = writer.get_extra_info('peername')
-            print(f"\nclient_w: {client_w}")
         except Exception as e:
-            print(f"Hit error with: {e}")
+            print(f"Listener: handle_connection: error with: {e}")
         data_received = await reader.readuntil(self.networking.SPINOZA_COIN_SUFFIX)
-        print(f"\nRequestHandler: handle_connection: Received: {data_received}")
+        print(f"\nListener: instance {self.networking.node.instance_id}: handle_connection: Received: {data_received}")
         try:
             if not data_received.startswith(self.networking.SPINOZA_COIN_PREFIX):
                 print("Bad prefix... closing")
@@ -29,7 +27,6 @@ class Listener:
             request_json = json.loads(request_encoded)
             
             response_json = self.networking.handle_request.get_response(request_json)
-            print(f"\nhandle_connection: response_json: {response_json}")
             response = Response(
                 reader = reader,
                 writer = writer,
@@ -39,7 +36,7 @@ class Listener:
             )
             response.respond()
             challenge_answer_received = await reader.readuntil(self.networking.SPINOZA_COIN_SUFFIX)
-            print(f"\nListener: handle_connection: challenge_answer_received: handle_connection: Received: {challenge_answer_received}")
+            print(f"\nListener: handle_connection: instance {self.networking.node.instance_id} challenge_answer_received: handle_connection: Received: {challenge_answer_received}")
             # validate answer to challenge
             answer_encoded = challenge_answer_received[self.networking.PREFIX_SIZE:-self.networking.SUFFIX_SIZE].decode()
             answer_json = json.loads(answer_encoded)
@@ -54,14 +51,13 @@ class Listener:
             
             
         except Exception as e:
-            print(f"hit issue parsing action with error: {e}")
+            print(f"Listener: handle_connection: hit issue parsing action with error: {e}")
         print("Closing...")
         await writer.drain()
         writer.close()
         await writer.wait_closed()
 
     async def run(self):
-        print("\nhandle_request: run")
         return await asyncio.start_server(
 	    self.handle_connection, 
             self.networking.node.host, 

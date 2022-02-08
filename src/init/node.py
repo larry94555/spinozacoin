@@ -133,7 +133,6 @@ class Node:
     async def start_node(self):
         if self.config.get_trusted_node() != "127.0.0.1" or self.instance_id != 0:
             if self.checkpoint == None:
-                print(f"\nAdding new node to p2p network...")
                 self.status=STATUS_NEW
                 await self.networking.announce_to(self.config.get_trusted_node(), self.config.get_trusted_port())
             else:
@@ -141,9 +140,8 @@ class Node:
                 self.status=STATUS_DOWN 
                 await self.networking.node_back_up(self.config.get_trusted_node(), self.config.get_trusted_port())
         else:
-            print(f"\nStarting first node...")
             self.handle_first_node()
-        print(f"\nstart_node: port: {self.port}, status: {self.status}")
+        print(f"\nstart_node: instance {self.instance_id} started node on port: {self.port}, status: {self.status}")
 
         return await self.networking.listen()
     

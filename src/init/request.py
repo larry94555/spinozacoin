@@ -17,7 +17,7 @@ class RequestClientProtocol(asyncio.Protocol):
         print(f"RequestClientProtocol Data sent: {self.message.encoded_payload}")
 
     def data_received(self, data_received):
-        print(f"\nRequestClientProtocol Data received: {data_received}")
+        print(f"\nRequestClientProtocol instance {self.request.networking.node.instance_id} Data received: {data_received}")
         # convert to json
         try:
             if not data_received.startswith(self.request.networking.SPINOZA_COIN_PREFIX):
@@ -57,15 +57,13 @@ class Request:
 
     async def send_to(self, destination_host, destination_port):
         try:
-            print(f"\nrequest: send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}")
+            print(f"\nrequest: instance {self.networking.node.instance_id} send_to: host: {destination_host}, port: {destination_port}, message: {self.message.get_encoded_payload()}")
             # Create connection per request
-            print(f"\ncreate_connection: host: {destination_host}, port: {destination_port}")
             transport, protocol = await self.networking.node.loop.create_connection(lambda: RequestClientProtocol(self, self.networking.node.loop), host=destination_host, port = destination_port)
             # This should be a command such as #send_node_info
-            print(f"\nrequest: sending message: {self.message.get_encoded_payload()}")
             transport.write(self.message.get_encoded_payload())
             self.transport = transport
             
         except Exception as e:
-            print(f"Connection to {destination_host}:{destination_port} failed with error: {e}")
+            print(f"request: send_to: Connection to {destination_host}:{destination_port} failed with error: {e}")
 

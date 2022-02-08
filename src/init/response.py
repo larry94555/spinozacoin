@@ -14,7 +14,6 @@ class Response:
 
     def respond(self):
         try:
-            print(f"\nResponse: respond: message: {self.message.get_encoded_payload()}")
             self.writer.write(self.message.get_encoded_payload())
         except Exception as e:
             print(f"respond failed with exception: {e}")

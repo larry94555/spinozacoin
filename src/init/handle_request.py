@@ -9,7 +9,7 @@ class HandleRequest:
 
     def get_response(self, request_json):
 
-        print(f"\nHandleRequest: get_response: request_json: {request_json}")
+        print(f"\nHandleRequest: instance {self.networking.node.instance_id} get_response: request_json: {request_json}")
 
         command_handler = {
             command.ANNOUNCE_NODE: self.handle_announce_node,
@@ -35,7 +35,6 @@ class HandleRequest:
     # 2. offset
     # 3. step
     def handle_announce_node(self, request_json, action):
-        print(f"handle_announce_node: request_json: {request_json}")
         latest_checkpoint = self.networking.node.directory.size()
         start_pos = util.random_position(latest_checkpoint)
         step = util.random_step(latest_checkpoint)
@@ -58,7 +57,6 @@ class HandleRequest:
         pass
 
     def handle_ready_to_join(self, request_json, action):
-        print(f"\nhandle_ready_to_join: request_json: {request_json}")
         # generate a list of checkpoints to check
         n = self.networking.node.config.get_num_nodes_returned_per_request()
         checkpoints = self.networking.node.directory.generate_random_up_to_n_checkpoints(n)
@@ -85,7 +83,6 @@ class HandleRequest:
         pass
 
     def handle_check_hash(self, request_json, action):
-        print(f"\nhandle_request: handle_check_hash: request_json: {request_json}")
         checkpoint = action['checkpoint']
         if 'hash' not in self.networking.node.directory.node_directory[str(checkpoint)]:
             self.networking.node.directory.generate_hashes()
@@ -102,7 +99,6 @@ class HandleRequest:
         pass
 
     def handle_broadcast(self, request_json, action):
-        print(f"\nhandle_broadcast: request_json: {request_json}")
         # Forward request 
         receipt=self.networking.broadcast_to(
 	    broadcast=action['broadcast'],

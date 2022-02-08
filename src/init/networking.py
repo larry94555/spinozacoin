@@ -20,6 +20,7 @@ class Networking:
         self.SUFFIX_SIZE: Final = len(self.SPINOZA_COIN_SUFFIX)
 
     async def announce_to(self, destination_host, destination_port):
+        print(f"\nnetworking: instance: {self.node.instance_id} announce_to {destination_host}:{destination_port}")
         request = Request(
             networking=self,
             identifier = self.node.get_public_key_value(),
@@ -98,7 +99,7 @@ class Networking:
         n = self.node.config.get_num_nodes_returned_per_request()
         if volume == size:
             try:
-                print(f"networking: nominate_nodes: volume: {volume} = size: {size}, starting validation")
+                print(f"\nnetworking: instance {self.node.instance_id} nominate_nodes: volume: {volume} = size: {size}, starting validation")
                 asyncio.create_task(self.validate_nominations(self.node.directory.nominee_count()))
             except Exception as e:
                 print(f"exception hit in nominate_nodes: {e}")
@@ -134,24 +135,24 @@ class Networking:
         print(f"networking: uptake checkpoints")
 
     async def validate_nominations(self, nominee_count):
-        print(f"\nvalidate_nominations: nominee_count: {nominee_count}")
+        print(f"\nnetworking: instance {self.node.instance_id} validate_nominations: nominee_count: {nominee_count}")
         if self.node.directory.nominee_count() == nominee_count:
             try:
-                print(f"Proceeding with validation...")
+                print(f"\nnetworking: instance {self.node.instance_id} validate_nominations: directry_count: {self.node.directory.nominee_count()} = nominee_count: {nominee_count}, proceeding with validation...")
                 self.node.directory.promote_nominations()
                 size = self.node.directory.get_number_of_nodes()
                 step = util.random_step(size)
                 # iterate through n items
-                print(f"Iterate through n items")
             except Exception as e:
-                print(f"validate_nominations: hit exception: {e}")
+                print(f"\nnetworking: validate_nominations: hit exception: {e}")
         else:
-            print(f"Discrepancy found: nominees found: {self.node.directory.nominee_count()}")
+            print(f"\nnetworking: instance {self.node.instance_id} validate_nominations: Discrepancy found: nominees found: {self.node.directory.nominee_count()}")
 
     def get_identifier(self):
         return self.node.checkpoint
 
     async def listen(self):
-        print(f"\nlisten: port: {self.node.port}")
+        print(f"\nnetworking: instance {self.node.instance_id} listen on port: {self.node.port}")
+
         listener = Listener(self)
         return await listener.run() 

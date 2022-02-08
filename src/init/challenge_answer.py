@@ -13,7 +13,7 @@ class ChallengeAnswer:
         
     def send(self):
         try:
-            print(f"\nchallenge_answer: send: message: {self.message.get_encoded_payload()}") 
+            print(f"\nChallengeAnswer: instance {self.message.networking.node.instance_id} send: message: {self.message.get_encoded_payload()}") 
             self.transport.write(self.message.get_encoded_payload())
         except Exception as e:
-            print(f"challenge_answer failed with exception {e}")
+            print(f"\nChallengeAnswer: failed with exception {e}")
