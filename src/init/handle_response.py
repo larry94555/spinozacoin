@@ -119,7 +119,9 @@ class HandleResponse:
         pass
         
     async def handle_send_challenge_result_response(self, response_json, transport, response):
-        pass
+        print(f"\nhandle_send_challenge_result_response:")
+        # 1. Send out a request to broadcast the 'nominate_node'
+        # 2. Validate that each request has been sent out to every node
 
     async def handle_broadcast_response(self, response_json, transport, response):
         pass
