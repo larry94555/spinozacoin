@@ -119,10 +119,23 @@ class HandleResponse:
         pass
         
     async def handle_send_challenge_result_response(self, response_json, transport, response):
-        print(f"\nhandle_send_challenge_result_response:")
         # 1. Send out a request to broadcast the 'nominate_node'
         # 2. Validate that each request has been sent out to every node
+        challenge_type = response['challenge_type']
+        print(f"\nhandle_send_challenge_result_response: challenge_type: {challenge_type}")
+        challenge_result_handler = {
+            command.READY_TO_JOIN: self.handle_ready_to_join_challenge_result
+        } 
+        await challenge_result_handler[challenge_type](response_json, transport, response)
+
+    async def handle_ready_to_join_challenge_result(self, response_json, transport, response):
+        print(f"\nhandle_ready_to_join_challenge_result")
+        pass
 
     async def handle_broadcast_response(self, response_json, transport, response):
+        #initiator_id = response_json['
+        #initiator_id = response_json['response']['receipt_json']['response_node_id']
+        #if self.networking.node.checkpoint != initiator:
+        #    forward_to_initiator
         pass
         

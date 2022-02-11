@@ -55,5 +55,6 @@ class HandleChallenge:
             response = result
         return {
             "action_type": command.SEND_CHALLENGE_RESULT,
-            "response": response
+            "challenge_type":  command.READY_TO_JOIN,
+            "challenge_result": response
         }
