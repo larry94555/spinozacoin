@@ -1,4 +1,5 @@
 import asyncio
+from broadcast import Broadcast
 import command
 import json
 import node_directory
@@ -31,22 +32,25 @@ class HandleChallenge:
         if result == node_directory.RESULT_GOOD:
             print(f"\nHandleChallenge: handle_ready_to_join_challenge: instance {self.networking.node.instance_id} Starting the nomination process to assign checkpoint to new node...")
             try:
-                receipt_json = {
-                    "authorized_action": command.NOMINATE_CHECKPOINTS,
-                    "receipt_timestamp": util.utc_timestamp(),
-                    "receipt_node_id": self.networking.node.checkpoint,
-                    "authorized_node_identifier": result_json['identifier']
-                }
-                print(f"\nreceipt_json: {receipt_json}")
+                identifier = result_json['identifier']
+                node_info = self.networking.node.directory.get_node_candidate_info(identifier)
+                broadcast = Broadcast(
+                    node=self.networking.node,
+                    message = {
+                        "action_type": command.NOMINATE_CHECKPOINTS,
+                        "public_key": result_json['identifier'].encode().hex(),
+                        "host": node_info['host'],
+                        "port": node_info['port']
+                    }
+                )
                 proof_of_receipt = util.get_signature_for_json(
                     private_key = self.networking.node.get_private_key(),
-                    json_string = json.dumps(receipt_json)
+                    json_string = json.dumps(broadcast.get_initiator_block())
                 )
-                print(f"\nproof_of_receipt: {proof_of_receipt}")
                 response = {
                     "result": result,
                     "proof_of_receipt": proof_of_receipt.hex(),
-                    "receipt_json": receipt_json
+                    "initiator_block": broadcast.get_initiator_block()
                 }
             except Exception as e:
                 print(f"\nhandle_challenge.handle_ready_to_join_challenge: hit error: {e}")

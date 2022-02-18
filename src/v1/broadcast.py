@@ -1,6 +1,6 @@
 from typing import Final
-from datetime.datetime import fromtimestamp
-from datetime.datetime import now
+import datetime
+import json
 import util
 
 # 1. A broadcast is always identified by an initiator (node_id, message, timestamp, broadcast_id, proof-of-initiator) 
@@ -29,7 +29,7 @@ BROADCAST_EXPIRATION_IN_SECONDS: Final = 3600
 class Broadcast:
     
     def __init__(self, node, message):
-        self.__initiator_node_id = node.get_id()
+        self.__initiator_node_id = node.checkpoint
         self.__message = message
         self.__timestamp  = util.utc_timestamp()
         self.__initiator_broadcast_id = node.get_next_broadcast_id() 
@@ -58,11 +58,12 @@ class Broadcast:
             return "broadcast expired"
         elif self.get_identifier() in node.broadcasts():
             return "broadcast already received"
-        elif if not util.validate_signature(
+        check_receipt = util.validate_signature(
                  public_key = node.get_public_key(),
                  signature = self.__proof_of_broadcast,
                  json_string = json.dumps(self.get_initiator_block())
-                 ):
+                 )
+        if not check_receipt:
             return "invalid signature" 
         else:
             return None
@@ -78,20 +79,20 @@ class Broadcast:
             "initiator_broadcast_id": self.__initiator_broadcast_id
         }
 
-     def get_initiator_broadcast_id(self):
-         return self.__initiator_broadcast_id
+    def get_initiator_broadcast_id(self):
+        return self.__initiator_broadcast_id
 
-     def get_initiator_node_id(self):
-         return self.__initiator_node_id
+    def get_initiator_node_id(self):
+        return self.__initiator_node_id
 
-     def get_message(self):
-         return self.__message
+    def get_message(self):
+        return self.__message
 
-     def get_proof_of_broadcast(self):
-         return self.__proof_of_broadcast
+    def get_proof_of_broadcast(self):
+        return self.__proof_of_broadcast
 
-     def get_timestamp(self):
-         return self.__timestamp
+    def get_timestamp(self):
+        return self.__timestamp
 
-     def has_expired(self):
-         return util.is_earlier_than(self.__timestamp, util.seconds_ago(BROADCAST_EXPIRATION_IN_SECONDS))
+    def has_expired(self):
+        return util.is_earlier_than(self.__timestamp, util.seconds_ago(BROADCAST_EXPIRATION_IN_SECONDS))

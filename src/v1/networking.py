@@ -3,6 +3,7 @@ import command
 from handle_challenge import HandleChallenge
 from handle_request import HandleRequest
 from handle_response import HandleResponse
+from initiator_block import InitiatorBlock
 from listener import Listener
 from request import Request
 import util
@@ -32,17 +33,17 @@ class Networking:
         )
         return await request.send_to(destination_host, destination_port)
 
-    async def broadcast_to(self, broadcast, broadcast_context, iteration_sequence_id, subrange_size, max_parts):
-        if (invalid_reason := broadcast.check_if_invalid(self.node)) != None:
-           print("broadcast received is invalid: {result} skipping...")
+    async def broadcast_to(self, initiator_block, broadcast_context, iteration_sequence_id, subrange_size, max_parts, redundancies=1):
+        if (invalid_reason := initiator_block.check_if_invalid(self.node)) != None:
+           print("initiator_block received is invalid: {result} skipping...")
            return False
            
         # add broadcast to the current node
-        self.node.add_broadcast(broadcast.get_identifier(), broadcast, broadcast_context)
+        self.node.add_broadcast(broadcast.get_identifier(), initiator_block, broadcast_context)
         if broadcast_context.get_subrange_size() == 1:
             # No more broadcasts are needed.  Nothing needs to be verified
             # return receipt which is a signed json of the broadcast
-            return broadcast.get_receipt(self.node)
+            return initiator_block.get_signature()
 
         subrange_size -= 1
         num_parts = min(max_parts, subrange_size) 

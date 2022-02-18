@@ -1,0 +1,275 @@
+secrets_path: /home/larry/spinozacoin/instance0/secrets
+Secret already exists
+
+Starting first node...
+
+start_node: port: 8888, status: up
+
+listen: port: 8888
+
+handle_request: run
+secrets_path: /home/larry/spinozacoin/instance1/secrets
+Secret already exists
+
+Adding new node to p2p network...
+file with path: /home/larry/spinozacoin/instance1/request_sequence_id.txt
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "304402206e437f6a567d3e4f5761d48ec5d4d8a91000c7a123e8881d3e0885e5ff9dffbd0220436ca406e998d6e6c460b784950d3c5cb09ce2e4f1c09b21cd333856c459fb00", "body": {"sequence_id": 45, "timestamp": 1644287978.984083, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64776)
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "304402206e437f6a567d3e4f5761d48ec5d4d8a91000c7a123e8881d3e0885e5ff9dffbd0220436ca406e998d6e6c460b784950d3c5cb09ce2e4f1c09b21cd333856c459fb00", "body": {"sequence_id": 45, "timestamp": 1644287978.984083, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+start_node: port: 8889, status: new
+
+listen: port: 8889
+
+handle_request: run
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "304402206e437f6a567d3e4f5761d48ec5d4d8a91000c7a123e8881d3e0885e5ff9dffbd0220436ca406e998d6e6c460b784950d3c5cb09ce2e4f1c09b21cd333856c459fb00", "body": {"sequence_id": 45, "timestamp": 1644287978.984083, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '304402206e437f6a567d3e4f5761d48ec5d4d8a91000c7a123e8881d3e0885e5ff9dffbd0220436ca406e998d6e6c460b784950d3c5cb09ce2e4f1c09b21cd333856c459fb00', 'body': {'sequence_id': 45, 'timestamp': 1644287978.984083, 'action': {'action_type': 'announce_node', 'host': '127.0.0.1', 'port': 8889}}}
+handle_announce_node: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '304402206e437f6a567d3e4f5761d48ec5d4d8a91000c7a123e8881d3e0885e5ff9dffbd0220436ca406e998d6e6c460b784950d3c5cb09ce2e4f1c09b21cd333856c459fb00', 'body': {'sequence_id': 45, 'timestamp': 1644287978.984083, 'action': {'action_type': 'announce_node', 'host': '127.0.0.1', 'port': 8889}}}
+
+handle_connection: response_json: {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3044022033a71d977d4282d991c70d79c29b4582be3c37b1155e546122e9342a3553e19b02202daa7aed80557c924fae2908b1c2fdac764c8054267260d7eaff73cd44c569b4", "body": {"timestamp": 1644287978.987691, "response": {"action_type": "announce_node", "checkpoint": 1, "start": 0, "step": 1, "next_n_nodes": [{"checkpoint": 1, "public_key": "03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da", "host": "127.0.0.1", "port": 8888, "status": "up"}]}}}\x07\x07\x07\x07'
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3044022033a71d977d4282d991c70d79c29b4582be3c37b1155e546122e9342a3553e19b02202daa7aed80557c924fae2908b1c2fdac764c8054267260d7eaff73cd44c569b4", "body": {"timestamp": 1644287978.987691, "response": {"action_type": "announce_node", "checkpoint": 1, "start": 0, "step": 1, "next_n_nodes": [{"checkpoint": 1, "public_key": "03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da", "host": "127.0.0.1", "port": 8888, "status": "up"}]}}}\x07\x07\x07\x07'
+secrets_path: /home/larry/spinozacoin/instance2/secrets
+Secret already exists
+
+Adding new node to p2p network...
+file with path: /home/larry/spinozacoin/instance2/request_sequence_id.txt
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3045022047c540df3ed3b2618e39aa72e74e6f52a4071f9e93000ea2e519133456da65de0221008669b18481f02736ab6077320cf4ac074b949edd728bbb5c3964e8c4698dcab9", "body": {"sequence_id": 7, "timestamp": 1644287978.990161, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '3044022033a71d977d4282d991c70d79c29b4582be3c37b1155e546122e9342a3553e19b02202daa7aed80557c924fae2908b1c2fdac764c8054267260d7eaff73cd44c569b4', 'body': {'timestamp': 1644287978.987691, 'response': {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}}}
+
+handle_announce_node_response: {'identifier': 1, 'signature': '3044022033a71d977d4282d991c70d79c29b4582be3c37b1155e546122e9342a3553e19b02202daa7aed80557c924fae2908b1c2fdac764c8054267260d7eaff73cd44c569b4', 'body': {'timestamp': 1644287978.987691, 'response': {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}}}
+
+directory: {'1': {'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up', 'source': 1}}
+
+port: 8889: check_hash_with trusted node: checkpoint=1, hash=1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb
+
+source_host: 127.0.0.1, source_port: 8888
+check_hash_with: destination_host: 127.0.0.1, destination_port: 8888, checkpoint: 1, hash: 1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb
+file with path: /home/larry/spinozacoin/instance1/request_sequence_id.txt
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "30450221009ed0da58415496dfa8727455bd5f7becba813ec3e78a6632017d9ef470f5c5710220765d75352c6ab961a7e5593abc141f437da6d2a9351e74a77b29e937345cc1a4", "body": {"sequence_id": 46, "timestamp": 1644287978.993832, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64777)
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64778)
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3045022047c540df3ed3b2618e39aa72e74e6f52a4071f9e93000ea2e519133456da65de0221008669b18481f02736ab6077320cf4ac074b949edd728bbb5c3964e8c4698dcab9", "body": {"sequence_id": 7, "timestamp": 1644287978.990161, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+start_node: port: 8890, status: new
+
+listen: port: 8890
+
+handle_request: run
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "30450221009ed0da58415496dfa8727455bd5f7becba813ec3e78a6632017d9ef470f5c5710220765d75352c6ab961a7e5593abc141f437da6d2a9351e74a77b29e937345cc1a4", "body": {"sequence_id": 46, "timestamp": 1644287978.993832, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3045022047c540df3ed3b2618e39aa72e74e6f52a4071f9e93000ea2e519133456da65de0221008669b18481f02736ab6077320cf4ac074b949edd728bbb5c3964e8c4698dcab9", "body": {"sequence_id": 7, "timestamp": 1644287978.990161, "action": {"action_type": "announce_node", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3045022047c540df3ed3b2618e39aa72e74e6f52a4071f9e93000ea2e519133456da65de0221008669b18481f02736ab6077320cf4ac074b949edd728bbb5c3964e8c4698dcab9', 'body': {'sequence_id': 7, 'timestamp': 1644287978.990161, 'action': {'action_type': 'announce_node', 'host': '127.0.0.1', 'port': 8890}}}
+handle_announce_node: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3045022047c540df3ed3b2618e39aa72e74e6f52a4071f9e93000ea2e519133456da65de0221008669b18481f02736ab6077320cf4ac074b949edd728bbb5c3964e8c4698dcab9', 'body': {'sequence_id': 7, 'timestamp': 1644287978.990161, 'action': {'action_type': 'announce_node', 'host': '127.0.0.1', 'port': 8890}}}
+
+handle_connection: response_json: {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3046022100fa3d8092ff7967a55e423eafc869ee43f98d9424692dc19489cada5d1cb78ccc022100f85f0546f1b8ec6b59ec75b0409e1ee247e0b4044dd68ede7359759fda637029", "body": {"timestamp": 1644287978.996682, "response": {"action_type": "announce_node", "checkpoint": 1, "start": 0, "step": 1, "next_n_nodes": [{"checkpoint": 1, "public_key": "03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da", "host": "127.0.0.1", "port": 8888, "status": "up"}]}}}\x07\x07\x07\x07'
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "30450221009ed0da58415496dfa8727455bd5f7becba813ec3e78a6632017d9ef470f5c5710220765d75352c6ab961a7e5593abc141f437da6d2a9351e74a77b29e937345cc1a4", "body": {"sequence_id": 46, "timestamp": 1644287978.993832, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '30450221009ed0da58415496dfa8727455bd5f7becba813ec3e78a6632017d9ef470f5c5710220765d75352c6ab961a7e5593abc141f437da6d2a9351e74a77b29e937345cc1a4', 'body': {'sequence_id': 46, 'timestamp': 1644287978.993832, 'action': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'}}}
+
+handle_request: handle_check_hash: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '30450221009ed0da58415496dfa8727455bd5f7becba813ec3e78a6632017d9ef470f5c5710220765d75352c6ab961a7e5593abc141f437da6d2a9351e74a77b29e937345cc1a4', 'body': {'sequence_id': 46, 'timestamp': 1644287978.993832, 'action': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'}}}
+
+handle_connection: response_json: {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "304502210083d8da120a32bc287d5ad979f8c4709996d086635a3f40b1b46fa43908e1ab7e0220154dd7cb34bcfa668151008bd414783b4f77c713f9f808368b3fddd3ffcde8d0", "body": {"timestamp": 1644287978.998023, "response": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb", "result": "GOOD"}}}\x07\x07\x07\x07'
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3046022100fa3d8092ff7967a55e423eafc869ee43f98d9424692dc19489cada5d1cb78ccc022100f85f0546f1b8ec6b59ec75b0409e1ee247e0b4044dd68ede7359759fda637029", "body": {"timestamp": 1644287978.996682, "response": {"action_type": "announce_node", "checkpoint": 1, "start": 0, "step": 1, "next_n_nodes": [{"checkpoint": 1, "public_key": "03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da", "host": "127.0.0.1", "port": 8888, "status": "up"}]}}}\x07\x07\x07\x07'
+3 nodes have started
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '3046022100fa3d8092ff7967a55e423eafc869ee43f98d9424692dc19489cada5d1cb78ccc022100f85f0546f1b8ec6b59ec75b0409e1ee247e0b4044dd68ede7359759fda637029', 'body': {'timestamp': 1644287978.996682, 'response': {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}}}
+
+handle_announce_node_response: {'identifier': 1, 'signature': '3046022100fa3d8092ff7967a55e423eafc869ee43f98d9424692dc19489cada5d1cb78ccc022100f85f0546f1b8ec6b59ec75b0409e1ee247e0b4044dd68ede7359759fda637029', 'body': {'timestamp': 1644287978.996682, 'response': {'action_type': 'announce_node', 'checkpoint': 1, 'start': 0, 'step': 1, 'next_n_nodes': [{'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up'}]}}}
+
+directory: {'1': {'checkpoint': 1, 'public_key': '03ec5eeccc8bff80a0ad5d5f2b30135cefc591205f5bbeec6815c54ffda3c754da', 'host': '127.0.0.1', 'port': 8888, 'status': 'up', 'source': 1}}
+
+port: 8890: check_hash_with trusted node: checkpoint=1, hash=1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb
+
+source_host: 127.0.0.1, source_port: 8888
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "304502210083d8da120a32bc287d5ad979f8c4709996d086635a3f40b1b46fa43908e1ab7e0220154dd7cb34bcfa668151008bd414783b4f77c713f9f808368b3fddd3ffcde8d0", "body": {"timestamp": 1644287978.998023, "response": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb", "result": "GOOD"}}}\x07\x07\x07\x07'
+check_hash_with: destination_host: 127.0.0.1, destination_port: 8888, checkpoint: 1, hash: 1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb
+file with path: /home/larry/spinozacoin/instance2/request_sequence_id.txt
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "304502201b72ad2003e06eb961db6fe1a06ab8d3cbc01828e38aaa44ee9216ce8e55f27f0221009285396a1f9b5897ee75d3568aceedd5397e9f4d35a5e877c9400ffb2b00cd74", "body": {"sequence_id": 8, "timestamp": 1644287979.001574, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '304502210083d8da120a32bc287d5ad979f8c4709996d086635a3f40b1b46fa43908e1ab7e0220154dd7cb34bcfa668151008bd414783b4f77c713f9f808368b3fddd3ffcde8d0', 'body': {'timestamp': 1644287978.998023, 'response': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}}}
+
+handle_check_hash_response: {'identifier': 1, 'signature': '304502210083d8da120a32bc287d5ad979f8c4709996d086635a3f40b1b46fa43908e1ab7e0220154dd7cb34bcfa668151008bd414783b4f77c713f9f808368b3fddd3ffcde8d0', 'body': {'timestamp': 1644287978.998023, 'response': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}}}
+result: GOOD, node status: new, checkpoint: 1
+
+handle_check_hash_response: node status: down, ready_to_join
+file with path: /home/larry/spinozacoin/instance1/request_sequence_id.txt
+
+networking ready_to_join: destination_host: 127.0.0.1, destination_port: 8888
+request: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7", "body": {"sequence_id": 47, "timestamp": 1644287979.003747, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7", "body": {"sequence_id": 47, "timestamp": 1644287979.003747, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64779)
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64780)
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "304502201b72ad2003e06eb961db6fe1a06ab8d3cbc01828e38aaa44ee9216ce8e55f27f0221009285396a1f9b5897ee75d3568aceedd5397e9f4d35a5e877c9400ffb2b00cd74", "body": {"sequence_id": 8, "timestamp": 1644287979.001574, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7", "body": {"sequence_id": 47, "timestamp": 1644287979.003747, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "304502201b72ad2003e06eb961db6fe1a06ab8d3cbc01828e38aaa44ee9216ce8e55f27f0221009285396a1f9b5897ee75d3568aceedd5397e9f4d35a5e877c9400ffb2b00cd74", "body": {"sequence_id": 8, "timestamp": 1644287979.001574, "action": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '304502201b72ad2003e06eb961db6fe1a06ab8d3cbc01828e38aaa44ee9216ce8e55f27f0221009285396a1f9b5897ee75d3568aceedd5397e9f4d35a5e877c9400ffb2b00cd74', 'body': {'sequence_id': 8, 'timestamp': 1644287979.001574, 'action': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'}}}
+
+handle_request: handle_check_hash: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '304502201b72ad2003e06eb961db6fe1a06ab8d3cbc01828e38aaa44ee9216ce8e55f27f0221009285396a1f9b5897ee75d3568aceedd5397e9f4d35a5e877c9400ffb2b00cd74', 'body': {'sequence_id': 8, 'timestamp': 1644287979.001574, 'action': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'}}}
+
+handle_connection: response_json: {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3045022079a5e56f631af1f433523aae035448b2831ed931b0bf89050a90076f4b214b58022100c29cf3d254fd87989f6f2611c8a841c997a50f5f23221c03b01165a3862e7cf8", "body": {"timestamp": 1644287979.00679, "response": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb", "result": "GOOD"}}}\x07\x07\x07\x07'
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7", "body": {"sequence_id": 47, "timestamp": 1644287979.003747, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8889}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7', 'body': {'sequence_id': 47, 'timestamp': 1644287979.003747, 'action': {'action_type': 'ready_to_join', 'host': '127.0.0.1', 'port': 8889}}}
+
+handle_ready_to_join: request_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '3045022076f3067f2c23b146bd675187089705a10c472417a0fbc7e8cc3fb66ceab3c8cc022100db030f975944a1cd3c0cca6488c20072a68e416f8ec519d0496c2e64a7bf6af7', 'body': {'sequence_id': 47, 'timestamp': 1644287979.003747, 'action': {'action_type': 'ready_to_join', 'host': '127.0.0.1', 'port': 8889}}}
+Return all checkpoints
+
+handle_connection: response_json: {'action_type': 'ready_to_join', 'challenge_id': 1, 'checkpoint_list': [1]}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3044022022b9c322c3c1e18fa51e10e9d3bf273be6f7f880fd7b14606a0bcf26930e1f1702206f919788c0a2ba1060a78b25a32c8368cb4976d0e0aa0e11bc128117ef5eca9e", "body": {"timestamp": 1644287979.007962, "response": {"action_type": "ready_to_join", "challenge_id": 1, "checkpoint_list": [1]}}}\x07\x07\x07\x07'
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3045022079a5e56f631af1f433523aae035448b2831ed931b0bf89050a90076f4b214b58022100c29cf3d254fd87989f6f2611c8a841c997a50f5f23221c03b01165a3862e7cf8", "body": {"timestamp": 1644287979.00679, "response": {"action_type": "check_hash", "checkpoint": 1, "hash": "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb", "result": "GOOD"}}}\x07\x07\x07\x07'
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '3045022079a5e56f631af1f433523aae035448b2831ed931b0bf89050a90076f4b214b58022100c29cf3d254fd87989f6f2611c8a841c997a50f5f23221c03b01165a3862e7cf8', 'body': {'timestamp': 1644287979.00679, 'response': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}}}
+
+handle_check_hash_response: {'identifier': 1, 'signature': '3045022079a5e56f631af1f433523aae035448b2831ed931b0bf89050a90076f4b214b58022100c29cf3d254fd87989f6f2611c8a841c997a50f5f23221c03b01165a3862e7cf8', 'body': {'timestamp': 1644287979.00679, 'response': {'action_type': 'check_hash', 'checkpoint': 1, 'hash': '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb', 'result': 'GOOD'}}}
+result: GOOD, node status: new, checkpoint: 1
+
+handle_check_hash_response: node status: down, ready_to_join
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3044022022b9c322c3c1e18fa51e10e9d3bf273be6f7f880fd7b14606a0bcf26930e1f1702206f919788c0a2ba1060a78b25a32c8368cb4976d0e0aa0e11bc128117ef5eca9e", "body": {"timestamp": 1644287979.007962, "response": {"action_type": "ready_to_join", "challenge_id": 1, "checkpoint_list": [1]}}}\x07\x07\x07\x07'
+file with path: /home/larry/spinozacoin/instance2/request_sequence_id.txt
+
+networking ready_to_join: destination_host: 127.0.0.1, destination_port: 8888
+request: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3", "body": {"sequence_id": 9, "timestamp": 1644287979.009916, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+request: send_to: host: 127.0.0.1, port: 8888, message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3", "body": {"sequence_id": 9, "timestamp": 1644287979.009916, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+create_connection: host: 127.0.0.1, port: 8888
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '3044022022b9c322c3c1e18fa51e10e9d3bf273be6f7f880fd7b14606a0bcf26930e1f1702206f919788c0a2ba1060a78b25a32c8368cb4976d0e0aa0e11bc128117ef5eca9e', 'body': {'timestamp': 1644287979.007962, 'response': {'action_type': 'ready_to_join', 'challenge_id': 1, 'checkpoint_list': [1]}}}
+
+handle_ready_to_join_response: {'identifier': 1, 'signature': '3044022022b9c322c3c1e18fa51e10e9d3bf273be6f7f880fd7b14606a0bcf26930e1f1702206f919788c0a2ba1060a78b25a32c8368cb4976d0e0aa0e11bc128117ef5eca9e', 'body': {'timestamp': 1644287979.007962, 'response': {'action_type': 'ready_to_join', 'challenge_id': 1, 'checkpoint_list': [1]}}}
+
+challenge_answer: send: message: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "304502204671ada0559c3ab2afcaec8749a141eec79b7ec10bc45593155929b02ff70aae022100923bd1a48da83be7d1b4cd43166aae93345dad6430429603830ebb9e2721ec64", "body": {"timestamp": 1644287979.011844, "challenge_answer": {"action_type": "ready_to_join", "challenge_id": 1, "answer": [[1, "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"]]}}}\x07\x07\x07\x07'
+
+Listener: handle_connection: challenge_answer_received: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393", "signature": "304502204671ada0559c3ab2afcaec8749a141eec79b7ec10bc45593155929b02ff70aae022100923bd1a48da83be7d1b4cd43166aae93345dad6430429603830ebb9e2721ec64", "body": {"timestamp": 1644287979.011844, "challenge_answer": {"action_type": "ready_to_join", "challenge_id": 1, "answer": [[1, "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"]]}}}\x07\x07\x07\x07'
+
+HandleChallenge: get_result: challenge_result_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '304502204671ada0559c3ab2afcaec8749a141eec79b7ec10bc45593155929b02ff70aae022100923bd1a48da83be7d1b4cd43166aae93345dad6430429603830ebb9e2721ec64', 'body': {'timestamp': 1644287979.011844, 'challenge_answer': {'action_type': 'ready_to_join', 'challenge_id': 1, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb']]}}}
+
+handle_ready_to_join_challenge: result_json: {'identifier': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'signature': '304502204671ada0559c3ab2afcaec8749a141eec79b7ec10bc45593155929b02ff70aae022100923bd1a48da83be7d1b4cd43166aae93345dad6430429603830ebb9e2721ec64', 'body': {'timestamp': 1644287979.011844, 'challenge_answer': {'action_type': 'ready_to_join', 'challenge_id': 1, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb']]}}}
+
+challenge_answer_json: {'action_type': 'ready_to_join', 'challenge_id': 1, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb']]}
+
+challenge_id: 1, answer: [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb']]
+
+validate_hashes: challenge_id: 1, answer: [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb']]
+
+handle_ready_to_join_challenge: Starting the nomination process to assign checkpoint to new node...
+
+handle_ready_to_join_challenge: nominate_nodes: node_info: {'public_key': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'host': '127.0.0.1', 'port': 8889}
+
+ChallengeResult: send: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "304502203517d117395f9a0e3393f19ee1c691cb14c75a5abad42b15a580def412ac695d022100f0554f4235a55466501858b1d6b2e68aa7d19e55b743f10d92a39d08dc160ed0", "body": {"timestamp": 1644287979.013381, "response": {"action_type": "send_challenge_result", "response": "GOOD"}}}\x07\x07\x07\x07'
+Closing...
+networking: nominate_nodes: volume: 1 = size: 1, starting validation
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "304502203517d117395f9a0e3393f19ee1c691cb14c75a5abad42b15a580def412ac695d022100f0554f4235a55466501858b1d6b2e68aa7d19e55b743f10d92a39d08dc160ed0", "body": {"timestamp": 1644287979.013381, "response": {"action_type": "send_challenge_result", "response": "GOOD"}}}\x07\x07\x07\x07'
+
+RequestHandler: handle_connection: 
+
+client_w: ('127.0.0.1', 64781)
+
+validate_nominations: nominee_count: 1
+Proceeding with validation...
+
+promote_nominations: i=0, public_key=0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393, node_info={'public_key': '0273b8930dace0f7a4674ff99e8062192efb94750854fb2657ceed73d37f0aa393', 'host': '127.0.0.1', 'port': 8889, 'checkpoint': 2, 'status': 'up'}
+Iterate through n items
+
+request: sending message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3", "body": {"sequence_id": 9, "timestamp": 1644287979.009916, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '304502203517d117395f9a0e3393f19ee1c691cb14c75a5abad42b15a580def412ac695d022100f0554f4235a55466501858b1d6b2e68aa7d19e55b743f10d92a39d08dc160ed0', 'body': {'timestamp': 1644287979.013381, 'response': {'action_type': 'send_challenge_result', 'response': 'GOOD'}}}
+
+handle_send_challenge_result
+
+RequestClientProtocol The server closed the connection: None
+Stop the event loop
+
+RequestHandler: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3", "body": {"sequence_id": 9, "timestamp": 1644287979.009916, "action": {"action_type": "ready_to_join", "host": "127.0.0.1", "port": 8890}}}\x07\x07\x07\x07'
+
+HandleRequest: get_response: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3', 'body': {'sequence_id': 9, 'timestamp': 1644287979.009916, 'action': {'action_type': 'ready_to_join', 'host': '127.0.0.1', 'port': 8890}}}
+
+handle_ready_to_join: request_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3046022100e625464d8730817456d1bf603f552d249ea1cd1ee7c3b220febf4785c656fd73022100ef6e11c4a84bbd57a94d2bb16ddac4edaf8a280b9eaebe9ff2ad6a3f2bc9b5e3', 'body': {'sequence_id': 9, 'timestamp': 1644287979.009916, 'action': {'action_type': 'ready_to_join', 'host': '127.0.0.1', 'port': 8890}}}
+Return all checkpoints
+
+handle_connection: response_json: {'action_type': 'ready_to_join', 'challenge_id': 2, 'checkpoint_list': [1, 2]}
+
+Response: respond: message: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3046022100cb2dbac5f571d561f5f3eee3d01839fb41c487a1860da75c53cabea626ec4679022100a5236a1ead360fc75c3774cef2c9421b8fa13b7bb6f0e57ad25fa3459f936fa8", "body": {"timestamp": 1644287979.015745, "response": {"action_type": "ready_to_join", "challenge_id": 2, "checkpoint_list": [1, 2]}}}\x07\x07\x07\x07'
+
+RequestClientProtocol Data received: b'\x02\x03\x05\x07{"identifier": 1, "signature": "3046022100cb2dbac5f571d561f5f3eee3d01839fb41c487a1860da75c53cabea626ec4679022100a5236a1ead360fc75c3774cef2c9421b8fa13b7bb6f0e57ad25fa3459f936fa8", "body": {"timestamp": 1644287979.015745, "response": {"action_type": "ready_to_join", "challenge_id": 2, "checkpoint_list": [1, 2]}}}\x07\x07\x07\x07'
+
+HandleResponse.run: response_json: {'identifier': 1, 'signature': '3046022100cb2dbac5f571d561f5f3eee3d01839fb41c487a1860da75c53cabea626ec4679022100a5236a1ead360fc75c3774cef2c9421b8fa13b7bb6f0e57ad25fa3459f936fa8', 'body': {'timestamp': 1644287979.015745, 'response': {'action_type': 'ready_to_join', 'challenge_id': 2, 'checkpoint_list': [1, 2]}}}
+
+handle_ready_to_join_response: {'identifier': 1, 'signature': '3046022100cb2dbac5f571d561f5f3eee3d01839fb41c487a1860da75c53cabea626ec4679022100a5236a1ead360fc75c3774cef2c9421b8fa13b7bb6f0e57ad25fa3459f936fa8', 'body': {'timestamp': 1644287979.015745, 'response': {'action_type': 'ready_to_join', 'challenge_id': 2, 'checkpoint_list': [1, 2]}}}
+
+challenge_answer: send: message: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3045022013cd2f400799eb0410cd5475bcb61f809edf789251b53e7d96b2e143b0c19152022100ef348a49a5f712d8e14f161519edc390de6f995de8f56384aa8b3362df07d5cc", "body": {"timestamp": 1644287979.017696, "challenge_answer": {"action_type": "ready_to_join", "challenge_id": 2, "answer": [[1, "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"], [2, "Node not found for checkpoint: 2"]]}}}\x07\x07\x07\x07'
+
+Listener: handle_connection: challenge_answer_received: handle_connection: Received: b'\x02\x03\x05\x07{"identifier": "023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7", "signature": "3045022013cd2f400799eb0410cd5475bcb61f809edf789251b53e7d96b2e143b0c19152022100ef348a49a5f712d8e14f161519edc390de6f995de8f56384aa8b3362df07d5cc", "body": {"timestamp": 1644287979.017696, "challenge_answer": {"action_type": "ready_to_join", "challenge_id": 2, "answer": [[1, "1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb"], [2, "Node not found for checkpoint: 2"]]}}}\x07\x07\x07\x07'
+
+HandleChallenge: get_result: challenge_result_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3045022013cd2f400799eb0410cd5475bcb61f809edf789251b53e7d96b2e143b0c19152022100ef348a49a5f712d8e14f161519edc390de6f995de8f56384aa8b3362df07d5cc', 'body': {'timestamp': 1644287979.017696, 'challenge_answer': {'action_type': 'ready_to_join', 'challenge_id': 2, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'], [2, 'Node not found for checkpoint: 2']]}}}
+
+handle_ready_to_join_challenge: result_json: {'identifier': '023ee44184cf6c8e1bfc75e27cc4dfe27b1cbe775e4b66d30447e3601490f55ba7', 'signature': '3045022013cd2f400799eb0410cd5475bcb61f809edf789251b53e7d96b2e143b0c19152022100ef348a49a5f712d8e14f161519edc390de6f995de8f56384aa8b3362df07d5cc', 'body': {'timestamp': 1644287979.017696, 'challenge_answer': {'action_type': 'ready_to_join', 'challenge_id': 2, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'], [2, 'Node not found for checkpoint: 2']]}}}
+
+challenge_answer_json: {'action_type': 'ready_to_join', 'challenge_id': 2, 'answer': [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'], [2, 'Node not found for checkpoint: 2']]}
+
+challenge_id: 2, answer: [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'], [2, 'Node not found for checkpoint: 2']]
+
+validate_hashes: challenge_id: 2, answer: [[1, '1c476c2ccd1e623c6bc2f7ae1b8479898136c256e69851b4a5898d42c5d94ecb'], [2, 'Node not found for checkpoint: 2']]
+hit issue parsing action with error: 'hash'
+Closing...
+
+RequestClientProtocol The server closed the connection: None
+Stop the event loop

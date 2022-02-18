@@ -1,7 +1,11 @@
 import asyncio
+from broadcast import Broadcast
+from broadcast_context import BroadcastContext
 from challenge_answer import ChallengeAnswer
 import command
+from initiator_block import InitiatorBlock
 import node
+import util
 
 class HandleResponse:
 
@@ -129,8 +133,38 @@ class HandleResponse:
         await challenge_result_handler[challenge_type](response_json, transport, response)
 
     async def handle_ready_to_join_challenge_result(self, response_json, transport, response):
-        print(f"\nhandle_ready_to_join_challenge_result")
-        pass
+        try:
+            print(f"\nhandle_ready_to_join_challenge_result")
+            # Initiate a broadcast of nominate node
+            initiator_info = response['challenge_result']['initiator_block']
+            initiator_signature = response['challenge_result']['proof_of_receipt']
+            print(f"\ninitiator_info = {initiator_info}")
+            initiator_block = InitiatorBlock(
+                node_id = initiator_info['initiator_node_id'],
+                message = initiator_info['message'],
+                broadcast_id = initiator_info['initiator_broadcast_id'],
+                timestamp = initiator_info['timestamp'],
+                signature = initiator_signature
+            )
+            size = self.networking.node.directory.get_number_of_nodes()
+            broadcast_context = BroadcastContext(
+                size = size,
+                start = util.random_position(size),
+                step = util.random_step(size)
+            )
+            iteration_sequence_id = 1
+            print(f"\ninitiator_block = {initiator_block.get_initiator_block()}")
+        except Exception as e:
+            print(f"\nhandle_response.handle_ready_to_join_challenge_result: hit exception {e}")  
+        await self.networking.broadcast_to(
+            initiator_block=initiator_block, 
+            broadcast_context=broadcast_context, 
+            iteration_sequence_id=iteration_sequence_id, 
+            subrange_size=size, 
+            max_parts=50,
+            redundancies=10
+        )    
+        print(f"It gets to the end without issue")
 
     async def handle_broadcast_response(self, response_json, transport, response):
         #initiator_id = response_json['
