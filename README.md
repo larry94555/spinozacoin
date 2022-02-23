@@ -11,7 +11,10 @@ a python-based blockchain
 7. mkdir ~/spinozacoin/log
 
 # Run
-python spinozacoind.py (found in ~/spinozacoin/src/init)
+1. Start bootstrapped, test nodes (nodes that are preregistered)
+python bootstrap.py -nc 1000
+2. Start client to initiate broadcast (a node that does not need to register)
+python trusted_client.py
 
 # Plan
 
