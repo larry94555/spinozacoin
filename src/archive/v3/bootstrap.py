@@ -9,6 +9,7 @@ import asyncio
 import logging
 from node import Node
 from node_directory import NodeDirectory
+from node import Status
 
 handler = logging.StreamHandler()
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -32,7 +33,8 @@ def main():
     node_list=[Node(instance_id=instance_id, 
                     instance_path=f"{args.instancepath}/instance{instance_id}",
                     host=args.host,
-                    port=args.baseport+instance_id
+                    port=args.baseport+instance_id,
+                    status=Status.up
                    ) for instance_id in range(args.nodecount)]
     for node in node_list:
         node.directory.populate_bootstraps(node_list)

@@ -1,13 +1,20 @@
+import enum
 from node_directory import NodeDirectory
 import os
 import util
+
+class Status(enum.Enum):
+    new = "status_new"
+    down = "status_down"
+    up = "status_up"
+    unreliable = "status_unreliable"
 
 
 class Node:
 
     NODE_ID_FILENAME = "node_id.txt"
     
-    def __init__(self, instance_id, instance_path, host, port):
+    def __init__(self, instance_id, instance_path, host, port, status=None):
         self.instance_id = instance_id
         self.host = host
         self.port = port
