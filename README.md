@@ -12,9 +12,16 @@ a python-based blockchain
 
 # Run
 1. Start bootstrapped, test nodes (nodes that are preregistered)
+
+```
 python bootstrap.py -nc 1000
+```
+
 2. Start client to initiate broadcast (a node that does not need to register)
+
+```
 python trusted_client.py
+```
 
 # Plan
 
