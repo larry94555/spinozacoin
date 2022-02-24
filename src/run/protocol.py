@@ -30,15 +30,9 @@ class Protocol(RPCProtocol):
             return False
 
     async def rpc_broadcast_message_to_next_neighborhood(self, address, message, start_id, last_id, source_node):
-        if source_node <= 10:
-            #print(f"\nProtoocol:rpc_broadcast_message_to_next_neighborhood: source_node: {source_node}, for: node_id: {self.node.node_id}, from: {address}, message: {message}, start_id: {start_id}, last_id: {last_id}")
-            pass
 
         # Skip if already received
         if self.node.already_received(message):
-            if source_node in [1,2]:
-                #print(f"\nreturning check...: source_node: {source_node}, node_id: {self.node.node_id}, saved: {self.node.get_saved_message(message)}") 
-                pass
             check=json.dumps(self.node.get_saved_message(message))
             return check
 
@@ -47,15 +41,13 @@ class Protocol(RPCProtocol):
         # each node does the broadcast and the resulting node rejects if it has alrady received the message
      
         next_last_id = next_neighborhood[-1]['node_id'] if len(next_neighborhood) > 0 else None
+        
         for node_info in next_neighborhood:
             #print(f"\nnode_id: {node_info['node_id']}, host: {node_info['host']}, port: {node_info['port']}")
             result = await self.protocol.broadcast_message_to_next_neighborhood( 
                 (node_info['host'], node_info['port']),
                 message, start_id, next_last_id, self.node.node_id)
             if result[0] and result[1] is not None:
-                if self.node.node_id in [1,2]:
-                    #print(f"\nnode_id: {self.node.node_id}, result[1]: {result[1]}")
-                    pass
                 saved_response |= json.loads(result[1])
 
         response = {}
@@ -75,6 +67,7 @@ class Protocol(RPCProtocol):
 
         self.node.save_message(message, response)
         return json.dumps(response)
+        #return (json.dumps(response),json.dumps(saved_response))
 
     async def rpc_broadcast_message(self, address, message, start_id=None, last_id=None):
         print(f"\nProtocol:rpc_broadcast_message: current: host: {self.node.host}, port: {self.node.port}, from: {address}, message: {message}, start_id: {start_id}, last_id: {last_id}") 

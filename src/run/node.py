@@ -14,7 +14,7 @@ class Status(enum.Enum):
 class Node:
 
     NODE_ID_FILENAME = "node_id.txt"
-    NEIGHBORHOOD_SIZE = 10
+    NEIGHBORHOOD_SIZE = 5
     
     def __init__(self, instance_id, instance_path, host, port, status=None, node_id=None):
         print(f"Node.__init__: instance_id: {instance_id}, instance_path: {instance_path}, host: {host}, port: {port}, status: {status}")
@@ -54,6 +54,9 @@ class Node:
 
     def get_current_neighborhood(self):
         return self.directory.get_neighborhood(self.node_id, self.NEIGHBORHOOD_SIZE)
+
+    def get_neighborhood_size(self):
+        return self.NEIGHBORHOOD_SIZE
 
     def get_next_neighborhood(self, start_id, last_id):
         if last_id+1 == start_id or start_id == 1 and last_id == self.directory.get_max_id():

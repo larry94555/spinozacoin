@@ -10,7 +10,6 @@ class NodeDirectory:
     NODE_DIRECTORY_FILE = "node_directory.json"
     NODE_COUNT = "node_count"
     NODE_BACKUP_HISTORY = 1
-    NEIGHBORHOOD_SIZE = 10
 
     def __init__(self, instance_path):
         self.node_file = f"{instance_path}/{self.NODE_DIRECTORY_FILE}"
@@ -37,7 +36,7 @@ class NodeDirectory:
         util.backup_file(self.node_file, self.NODE_BACKUP_HISTORY)
         util.write_dict_to_file(self.db, self.node_file)
         
-    def populate_bootstraps(self, node_list):
+    def populate_bootstraps(self, node_list, neighborhood_size):
         print(f"NodeDirectory:populate_bootstraps: nodecount: {len(node_list)}")
         # add node values
         # add neighborhood values
@@ -52,7 +51,7 @@ class NodeDirectory:
             }
         self.db[self.NODE_COUNT] = len(node_list)
         # assign values for neighborhoods
-        num_neighborhoods = math.ceil(len(node_list)/self.NEIGHBORHOOD_SIZE)
+        num_neighborhoods = math.ceil(len(node_list)/neighborhood_size)
         self.persist()
 
     def set_node_info(self, node):
