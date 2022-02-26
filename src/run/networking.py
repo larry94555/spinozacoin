@@ -9,7 +9,7 @@ class Server:
         print(f"\nnode id: {node.node_id}, host: {node.host}, port: {node.port}")
         self.node = node
         self.protocol_class = None
-        self.protocol_class = Protocol(node, 100)
+        self.protocol_class = Protocol(node, 1000)
 
     def _create_protocol(self):
         return self.protocol_class

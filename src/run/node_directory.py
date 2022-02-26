@@ -16,13 +16,17 @@ class NodeDirectory:
         self.db = {}
         self.db[self.NODE_COUNT] = 0
 
+    def get_address(self, node_id):
+        node_info = self.db[str(node_id)] if str(node_id) in self.db else None
+        return (node_info['host'], node_info['port']) if node_info is not None else None
+
     def get_max_id(self):
         return self.db[self.NODE_COUNT]
 
     def get_neighborhood(self, node_id, neighborhood_size):
-        print(f"\nget_neighborhood: node_id: {node_id}, size: {neighborhood_size}")
+        #print(f"\nget_neighborhood: node_id: {node_id}, size: {neighborhood_size}")
         neighborhood_start = node_id - ((node_id-1) % neighborhood_size)
-        print(f"neighborhood_start: {neighborhood_start}")
+        #print(f"neighborhood_start: {neighborhood_start}")
         result=[self.db[str(i)] for i in range(neighborhood_start, neighborhood_start+neighborhood_size) if str(i) in self.db]
         return result + [self.db[str(i+1)] for i in range(0, neighborhood_size - len(result)) if str(i+1) in self.db and self.db[str(i+1)] not in result]
 
@@ -31,6 +35,9 @@ class NodeDirectory:
 
     def has_node_id(self, node_id):
         return str(node_id) in self.db
+
+    def get_node_info(self, node_id):
+        return self.db[str(node_id)]
 
     def persist(self):
         util.backup_file(self.node_file, self.NODE_BACKUP_HISTORY)

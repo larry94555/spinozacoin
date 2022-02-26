@@ -1,5 +1,6 @@
 import asyncio
 import enum
+import json
 from node_directory import NodeDirectory
 import os
 from networking import Server
@@ -14,7 +15,7 @@ class Status(enum.Enum):
 class Node:
 
     NODE_ID_FILENAME = "node_id.txt"
-    NEIGHBORHOOD_SIZE = 5
+    NEIGHBORHOOD_SIZE = 15
     
     def __init__(self, instance_id, instance_path, host, port, status=None, node_id=None):
         print(f"Node.__init__: instance_id: {instance_id}, instance_path: {instance_path}, host: {host}, port: {port}, status: {status}")
@@ -33,14 +34,9 @@ class Node:
         self.private_key_file = f"{self.secrets_path}/node.private.key.pem"
         self.public_key_file = f"{self.secrets_path}/node.public.key.pem"
         self.try_to_set_node_info()
-        self.messages_validated = {}
-        self.messages_received = {}
-
-    def already_received(self, message):
-        return message in self.messages_received
-
-    def already_validated(self, message):
-        return message in self.messages_validated
+        self.receipts_for_node = {}
+        self.receipts_for_current_neighborhood = {}
+        self.receipts_for_next_neighborhood = {}
 
     def create_path_if_needed(self, path):
         if not os.path.exists(path):
@@ -58,6 +54,11 @@ class Node:
     def get_neighborhood_size(self):
         return self.NEIGHBORHOOD_SIZE
 
+    def get_next_address(self):
+        next_node_id = self.node_id + self.NEIGHBORHOOD_SIZE if self.node_id + self.NEIGHBORHOOD_SIZE <= self.directory.get_max_id() else self.node_id + self.NEIGHBORHOOD_SIZE - self.directory.get_max_id()
+        node_info = self.directory.get_node_info(next_node_id)
+        return (node_info['host'], node_info['port'])
+
     def get_next_neighborhood(self, start_id, last_id):
         if last_id+1 == start_id or start_id == 1 and last_id == self.directory.get_max_id():
             return []
@@ -71,10 +72,27 @@ class Node:
            next_start_id = 1
         
         return self.directory.get_neighborhood_by_limits(next_start_id, next_last_id)
-            
+
+    def get_node_from_next_neighborhood(self):
+        return self.node_id + self.NEIGHBORHOOD_SIZE if self.node_id + self.NEIGHBORHOOD_SIZE <= self.directory.get_max_id() else self.node_id + self.NEIGHBORHOOD_SIZE - self.directory.get_max_id()
 
     def get_node_id_file(self):
         return f"{self.instance_path}/{self.NODE_ID_FILENAME}"
+
+    def get_node_receipt(self, message):
+        if message in self.receipts_for_node:
+            return self.receipts_for_node[message]
+        node_receipt = util.get_signature_for_json(
+                           private_key=self.get_private_key(),
+                           json_string=json.dumps(message)).hex()
+        self.receipts_for_node[message] = node_receipt
+        return node_receipt
+
+    def get_receipt_for_current_neighborhood(self, message):
+        return self.receipts_for_current_neighborhood[message] if message in self.receipts_for_current_neighborhood else None
+
+    def get_receipt_for_next_neighborhood(self, message):
+        return self.receipts_for_next_neighborhood[message] if message in self.receipts_for_next_neighborhood else None
 
     def get_public_key(self):
         if self.__public_key is None or self.__private_key is None:
@@ -92,16 +110,26 @@ class Node:
 
     def get_saved_message(self, message):
         return self.messages_received[message]
+
+    def get_updated_last_node_id(self, node_id):
+        node_id += self.NEIGHBORHOOD_SIZE
+        return 1 if node_id > self.directory.get_max_id() else node_id
+
+    def has_receipt_for_current_neighborhood(self, message):
+        return message in self.receipts_for_current_neighborhood
+
+    def has_receipt_for_next_neighborhood(self, message):
+        return message in self.receipts_for_next_neighborhood
         
     def listen(self):
         print(f"node:listen: host: {self.host}, port: {self.port}")
         self.server.listen(host=self.host, port=self.port)
 
-    def save_message(self, message, receipt):
-        self.messages_received[message] = receipt 
+    def save_receipt_for_current_neighborhood(self, message, neighborhood_receipt):
+        self.receipts_for_current_neighborhood[message] = neighborhood_receipt
 
-    def save_validation(self, message, validation):
-        self.messages_validated[message] = validation
+    def save_receipt_for_next_neighborhood(self, message, neighborhood_receipt):
+        self.receipts_for_next_neighborhood[message] = neighborhood_receipt
 
     def try_to_set_node_info(self):
         if os.path.exists(self.get_node_id_file()):
