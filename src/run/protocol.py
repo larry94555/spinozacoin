@@ -17,7 +17,8 @@ class Protocol(RPCProtocol):
         self.transport = transport
 
     # If cached, return node receipt, otherwise generate and cache
-    async def broadcast_to_node(self, address, message):
+    async def rpc_broadcast_to_node(self, address, message):
+        #print(f"\nbroadcast_to_node: node_id: {self.node.node_id}")
         return self.node.get_node_receipt(message)
 
     async def rpc_broadcast_message_to_neighborhood(self, address, message):
@@ -27,13 +28,16 @@ class Protocol(RPCProtocol):
         neighborhood_receipt[str(self.node.node_id)] = self.node.get_node_receipt(message)
 
         neighborhood = self.node.get_current_neighborhood()
+        #print(f"\nrpc_broadcast_message_to_neighborhood: neighborhood: {neighborhood}")
         for node_info in neighborhood:
+            node_address = (node_info['host'], node_info['port'])
+            node_id = node_info['node_id']
+            #print(f"\nnode_info: {node_info}, node_id: {node_info['node_id']}, node_address: {node_address}, current_node_id: {self.node.node_id}")
             # get node receipt 
             # add to neighborhood receipt
-            if node_info['node_id'] != self.node.node_id:
-                address = (node_info['host'], node_info['port'])
-                node_id = node_info['node_id']
-                neighborhood_receipt[str(node_id)] = await self.protocol.broadcast_to_node(address, message)
+            if node_id != self.node.node_id:
+                result = await self.protocol.broadcast_to_node(node_address, message)           
+                neighborhood_receipt[str(node_id)] = result[1] if result[0] else None
         neighborhood_receipt = json.dumps(neighborhood_receipt)
         self.node.save_receipt_for_current_neighborhood(message, neighborhood_receipt)
         return neighborhood_receipt
@@ -91,40 +95,44 @@ class Protocol(RPCProtocol):
         #print(f"\nrpc_validate_next_broadcast: node_id: {self.node.node_id}, first_node_id: {first_node_id}, last_node_id: {last_node_id}")
         receipt_for_next_neighborhood = self.node.get_receipt_for_next_neighborhood(message)
         if receipt_for_next_neighborhood is None:
-            #print(f"\nrpc_validate_next_broadcast: node_id: {self.node.node_id}, Failed for receipt_for_next_neighborhood 1")
+            print(f"\nrpc_validate_next_broadcast: node_id: {self.node.node_id}, Failed for receipt_for_next_neighborhood 1")
             return "Fail"
         updated_last_node_id = self.node.get_updated_last_node_id(last_node_id)
-        if first_node_id is None or first_node_id != last_node_id:
+        #print(f"\nchecking: first_node_id: {first_node_id}, last_node_id: {last_node_id}")
+        if first_node_id is not None and first_node_id == last_node_id:
            return "Success" 
         receipt_for_next_neighborhood = self.node.get_receipt_for_next_neighborhood(message)
         if receipt_for_next_neighborhood is None:
-            #print(f"\nrpc_validate_next_broadcast: node_id: {self.node.node_id}, Failed for receipt_for_next_neighborhood 2")
+            print(f"\nrpc_validate_next_broadcast: node_id: {self.node.node_id}, Failed for receipt_for_next_neighborhood 2")
             return "Fail"
         next_node_id = int(list(json.loads(receipt_for_next_neighborhood))[0])
-        print(f"\nrpc_validate_broadcast: next_node_id: {next_node_id}")
+        #print(f"\nrpc_validate_broadcast: next_node_id: {next_node_id}")
         next_address = self.node.directory.get_address(next_node_id)
         last_node_id = next_node_id - 1 if next_node_id > 1 else 1
         return await self.protocol.validate_next_broadcast(next_address, message, first_node_id, last_node_id)
        
     async def rpc_validate_broadcast(self, address, message):
-        print(f"\nrpc_validate_broadcast: address: {address}, message: {message}, node_id: {self.node.node_id}")
+        #print(f"\nrpc_validate_broadcast: address: {address}, message: {message}, node_id: {self.node.node_id}")
         # TODO: Validate each receipt
         # 1. Validate current
         receipt_for_current_neighborhood = self.node.get_receipt_for_current_neighborhood(message)
+        #print(f"\nprotocol:rpc_validate_broadcast: receipt_for_current_neighborhood: {receipt_for_current_neighborhood}")
         #print(f"\nreceipt_for_current_neighborhood: {receipt_for_current_neighborhood}")
-        if receipt_for_current_neighborhood is None:
+        if receipt_for_current_neighborhood is None or self.node.found_invalid_neighborhood_receipt(json.loads(receipt_for_current_neighborhood), message):
             print(f"\nrpc_validate_broadcast: node_id: {self.node.node_id}, receipt_for_current_neighborhood failed")
             return "Fail"
+            
+
         # 2. Check next 
         receipt_for_next_neighborhood = self.node.get_receipt_for_next_neighborhood(message)
         #print(f"\nreceipt_for_next_neighborhood: {receipt_for_next_neighborhood}")
-        if receipt_for_next_neighborhood is None:
+        if receipt_for_next_neighborhood is None or self.node.found_invalid_neighborhood_receipt(json.loads(receipt_for_next_neighborhood), message):
             print(f"\nrpc_validate_broadcast: node_id: {self.node.node_id}, receipt_for_next_neighborhood failed")
             return "Fail"
 
         next_node_id = int(list(json.loads(receipt_for_next_neighborhood))[0])
         first_node_id = int(list(json.loads(receipt_for_current_neighborhood))[0])
-        print(f"\nrpc_validate_broadcast: next_node_id: {next_node_id}")
+        #print(f"\nrpc_validate_broadcast: next_node_id: {next_node_id}")
         next_address = self.node.directory.get_address(next_node_id)
         last_node_id = next_node_id - 1 if next_node_id > 1 else 1
         return await self.protocol.validate_next_broadcast(next_address, message, first_node_id, last_node_id)

@@ -17,7 +17,7 @@ class NodeDirectory:
         self.db[self.NODE_COUNT] = 0
 
     def get_address(self, node_id):
-        node_info = self.db[str(node_id)] if str(node_id) in self.db else None
+        node_info = self.get_node_info(node_id)
         return (node_info['host'], node_info['port']) if node_info is not None else None
 
     def get_max_id(self):
@@ -30,14 +30,21 @@ class NodeDirectory:
         result=[self.db[str(i)] for i in range(neighborhood_start, neighborhood_start+neighborhood_size) if str(i) in self.db]
         return result + [self.db[str(i+1)] for i in range(0, neighborhood_size - len(result)) if str(i+1) in self.db and self.db[str(i+1)] not in result]
 
+
     def get_neighborhood_by_limits(self, start_id, last_id):
         return [self.db[str(i)] for i in range(start_id,last_id+1)]
 
+    def get_node_info(self, node_id):
+        return self.db[str(node_id)] if str(node_id) in self.db else None
+        
+    def get_node_property(self, node_id, property):
+        return self.db[str(node_id)][property] if str(node_id) in self.db else None
+
+    def get_public_key(self, node_id):
+        return self.get_node_property(node_id, "public_key")
+
     def has_node_id(self, node_id):
         return str(node_id) in self.db
-
-    def get_node_info(self, node_id):
-        return self.db[str(node_id)]
 
     def persist(self):
         util.backup_file(self.node_file, self.NODE_BACKUP_HISTORY)

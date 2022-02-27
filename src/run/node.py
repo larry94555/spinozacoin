@@ -48,6 +48,10 @@ class Node:
         util.write_bytes_to_file(private_key, self.private_key_file)
         util.write_bytes_to_file(public_key, self.public_key_file)
 
+    def found_invalid_neighborhood_receipt(self, neighborhood_receipt, message):
+        #print(f"\nnode:found_invalid_neighborhood_receipt: message: {message}, neighborhood_receipt: {neighborhood_receipt}")
+        return False in [self.validate_receipt(receipt[0], receipt[1], message) for receipt in neighborhood_receipt.items()]
+
     def get_current_neighborhood(self):
         return self.directory.get_neighborhood(self.node_id, self.NEIGHBORHOOD_SIZE)
 
@@ -84,7 +88,9 @@ class Node:
             return self.receipts_for_node[message]
         node_receipt = util.get_signature_for_json(
                            private_key=self.get_private_key(),
-                           json_string=json.dumps(message)).hex()
+                           json_string=message).hex()
+        # Test validate
+        #print(f"\nNode: get_node_receipt: node_id: {self.node_id}, message: {message}, node_receipt: {node_receipt}, validation: {self.validate_receipt(self.node_id, node_receipt, message)}")
         self.receipts_for_node[message] = node_receipt
         return node_receipt
 
@@ -135,3 +141,16 @@ class Node:
         if os.path.exists(self.get_node_id_file()):
             self.node_id = util.read_num_from_file(self.get_node_id_file())
             self.directory.set_node_info(self)
+
+    def validate_node_down(self, node_id):
+        return True
+
+    def validate_receipt(self, node_id, receipt, message):
+        #print(f"\nnode.validate_receipt: node_id: {node_id}, receipt: {receipt}")
+        public_key = self.directory.get_public_key(node_id)
+        result=self.validate_node_down(node_id) if receipt == "down" else util.validate_signature(public_key_hex=public_key, signature_hex=receipt, json_string=message)
+        #if result == False:
+        #    print(f"\n***Fail: Node: validate_receipt: node_id: {node_id}, message: {message}, node_receipt: {receipt},")
+        #else:
+        #    print(f"\nPassed: Node: validate_receipt: node_id: {node_id}, message: {message}, node_receipt: {receipt},")
+        return result

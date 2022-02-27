@@ -1,5 +1,6 @@
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ec
+from cryptography.hazmat.primitives.asymmetric.ec import EllipticCurvePublicKey
 from typing import Final
 from cryptography.hazmat.primitives import hashes
 import json
@@ -60,6 +61,17 @@ def read_bytes_from_file(file_with_path):
 def read_num_from_file(file_with_path):
     with open(f"{file_with_path}", "r") as text_file:
         return int(text_file.read())
+
+def validate_signature(public_key_hex, signature_hex, json_string):
+    #print(f"\nutil.validate_signature: public_key_hex: {public_key_hex}, signature_hex:  {signature_hex}, json_string: {json_string}")
+    public_key = EllipticCurvePublicKey.from_encoded_point(CURVE, bytes.fromhex(public_key_hex)) 
+    signature = bytes.fromhex(signature_hex) 
+    try:
+        public_key.verify(signature, json_string.encode(), SIGNATURE_ALGORITHM)
+    except Exception as e:
+        #print(f"\nvalidate_signature: json_string: {signature}, json_string: {json_string}, Exception: {e}")
+        return False
+    return True
 
 def write_bytes_to_file(bytes, file_with_path):
     with open(f"{file_with_path}", "wb") as byte_file:
