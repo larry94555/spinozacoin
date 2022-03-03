@@ -34,7 +34,7 @@ is mainstream, public, and conducive to promoting self-run software services.  T
 
 I will be implmenting this project in phases and will write a white paper for each phase which I will post in draft:
 
-Current Status:  **Phase 1: configure up to 3900 validateable bootstrapped, test nodes, still need to add validation and registration process coming soon**
+Current Status:  **Phase 1: configure up to 3900 validateable bootstrapped, test nodes, still need to add validation to test_client, registration process coming soon, and right now only simulating happy path for bootstarpped nodes (will add down nodes and random nodes for capability to test resilience)**
 
 * **Phase 1**:  Node discovery:  Provide a peer-to-peer network for nodes governed by a shared node directory of all validated nodes.
     * **Goal**: Validateable, Efficient Broadcasts across registered nodes in good standing
