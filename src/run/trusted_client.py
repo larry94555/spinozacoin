@@ -1,7 +1,12 @@
+"""
+Trusted client is a sample client that uses for demo and testing
+"""
+
 import asyncio
 import json
-from rpcudp.protocol import RPCProtocol
 import time
+
+from rpcudp.protocol import RPCProtocol
 
 start_time = time.time()
 
@@ -11,9 +16,9 @@ def _create_protocol():
 
 loop = asyncio.get_event_loop()
 listen = loop.create_datagram_endpoint(_create_protocol, local_addr=('127.0.0.1', 5090))
-transport, protocol = loop.run_until_complete(listen)
+transport_returned, protocol_returned = loop.run_until_complete(listen)
 
-request = {
+sample_request = {
     "message": {
         "action": "nominate_node",
         "host": "127.0.0.1",
@@ -22,15 +27,17 @@ request = {
 }
 
 
-async def broadcast_message(protocol, address, request):
-    result = await protocol.initiate_broadcast(address, json.dumps(request))
+async def broadcast_message(protocol_to_use, address, request_to_use):
+    """
+    broadcast message to all nodes
+    """
+    result = await protocol_to_use.initiate_broadcast(address, json.dumps(request_to_use))
     print(result[1] if result[0] else "No response received.")
     print(f"\ntime_elapsed: {time.time() - start_time}")
     start_time2 = time.time()
-    result2 = await protocol.validate_broadcast(address, json.dumps(request))
+    result2 = await protocol_to_use.validate_broadcast(address, json.dumps(request_to_use))
     print(result2[1] if result2[0] else "No response received.")
     print(f"\ntime_elapsed2: {time.time() - start_time2}")
 
-func = broadcast_message(protocol, ('127.0.0.1', 6100), request)
-loop.run_until_complete(func)
+loop.run_until_complete(broadcast_message(protocol_returned, ('127.0.0.1', 6100), sample_request))
 loop.run_forever()
