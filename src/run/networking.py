@@ -14,8 +14,7 @@ class Server:
     def __init__(self, node):
         print(f"\nnode id: {node.node_id}, host: {node.info.host}, port: {node.info.port}")
         self.node = node
-        self.protocol_class = None
-        self.protocol_class = Protocol(node, 1000)
+        self.protocol_class = Protocol(node, 5)
 
     def create_protocol(self):
         """

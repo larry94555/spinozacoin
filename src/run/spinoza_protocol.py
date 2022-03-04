@@ -2,6 +2,7 @@
 Protocol for validated broadcast to all nodes
 """
 
+import asyncio
 import json
 from rpcudp.protocol import RPCProtocol
 
@@ -10,7 +11,7 @@ class Protocol(RPCProtocol):
     Protocol is the class used for the validateable broadcast
     """
 
-    def __init__(self, node, wait_timeout=10, protocol=None):
+    def __init__(self, node, wait_timeout=5, protocol=None):
         RPCProtocol.__init__(self, wait_timeout=wait_timeout)
         self.node = node
         self.protocol = protocol
@@ -78,8 +79,8 @@ class Protocol(RPCProtocol):
         """
         proceed to broadcast to the next neighborhood
         """
-        #print(f"\nrpc_broadcast_message_to_next_neighborhood: address: {address}, first_node_id:"
-        #      " {first_node_id}, last_node_id: {last_node_id}, node_id: {self.node.node_id}")
+        print(f"\nrpc_broadcast_message_to_next_neighborhood: address: {address}, first_node_id:"
+              f" {first_node_id}, last_node_id: {last_node_id}, node_id: {self.node.node_id}")
 
         receipt_for_current_neighborhood = (self.node.get_receipt_for_current_neighborhood(message)
             if self.node.has_receipt_for_current_neighborhood(message) else None)
@@ -130,10 +131,25 @@ class Protocol(RPCProtocol):
         if first_node_id is None or first_node_id != last_node_id:
             next_address = self.node.get_next_address()
             #print(f"\nnode_id: {self.node.node_id}, next_address: {next_address}")
-            await self.protocol.broadcast_message_to_next_neighborhood(next_address,
-                      message, updated_first_node_id, updated_last_node_id)
+            asyncio.ensure_future(
+                self._broadcast_message_to_next_neighborhood(
+                    next_address, message, updated_first_node_id, updated_last_node_id))
 
-        return (receipt_for_current_neighborhood, receipt_for_next_neighborhood)
+        else:
+            messageJson = json.loads(message)
+            host = messageJson['message']['host']
+            port = messageJson['message']['port']
+            print(f"\nBroadcast complete... Invoking callback: message: {messageJson}, host: {host}, port: {port}")
+            self.protocol.broadcast_complete((host,int(port)), "test") 
+            #data = umsgpack.packb(['test', message])
+            #txdata = b'\x80' + sha1(os.urandom(32)).digest()+data
+            #self.transport.sendto(txdata, (host,int(port)))
+            
+
+    async def _broadcast_message_to_next_neighborhood(self,
+                  next_address, message, updated_first_node_id, updated_last_node_id):
+        await self.protocol.broadcast_message_to_next_neighborhood(
+            next_address, message, updated_first_node_id, updated_last_node_id)
 
     async def rpc_validate_next_broadcast(self, address, message, first_node_id, last_node_id):
         """
@@ -157,7 +173,15 @@ class Protocol(RPCProtocol):
         #print(f"\nrpc_validate_broadcast: next_node_id: {next_node_id}")
         next_address = self.node.directory.get_address(next_node_id)
         last_node_id = next_node_id - 1 if next_node_id > 1 else 1
-        return await self.protocol.validate_next_broadcast(next_address, message,
+         
+        asyncio.ensure_future(
+            self._validate_next_broadcast(next_address, message, first_node_id,
+                                          last_node_id))
+        return "Success"
+
+    async def _validate_next_broadcast(self, next_address, message, first_node_id,
+                                       last_node_id):
+        self.protocol.validate_next_broadcast(next_address, message,
                                                            first_node_id, last_node_id)
 
     async def rpc_validate_broadcast(self, address, message):
