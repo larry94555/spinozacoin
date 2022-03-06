@@ -22,4 +22,4 @@ jobs:
         pip install cryptography
     - name: Analysing the code with pylint
       run: |
-        pylint --ignore-paths=src/archive $(git ls-files 'src/run/*.py') 
+        pylint $(git ls-files 'src/run/*.py') 
