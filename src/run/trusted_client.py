@@ -11,25 +11,26 @@ from rpcudp_protocol import RPCProtocol
 start_time = time.time()
 
 class ClientProtocol(RPCProtocol):
-   """
-   class to call local methods
-   """
-   def __init__(self, wait_timeout=5, protocol=None):
-      RPCProtocol.__init__(self, wait_timeout=wait_timeout)
-      self.protocol=protocol
+    """
+    class to call local methods
+    """
+    def __init__(self, wait_timeout=5, protocol=None):
+        RPCProtocol.__init__(self, wait_timeout=wait_timeout)
+        self.protocol=protocol
 
-   def save_protocol_and_transport(self, protocol, transport):
-       """
-       Save the protocol and transport
-       """
-       self.protocol = protocol
-       self.transport = transport
+    def save_protocol_and_transport(self, protocol, transport):
+        """
+        Save the protocol and transport
+        """
+        self.protocol = protocol
+        self.transport = transport
 
-   def rpc_broadcast_complete(self, address, response): 
-       """
-       call back used when broadcast complete.
-       """
-       print(f"\nBroadcast complete at: {time.time() - start_time}, response: {response}")
+    def rpc_broadcast_complete(self, address, response):
+        """
+        call back used when broadcast complete.
+        """
+        print(f"\nBroadcast complete at: address: {address} {time.time() - start_time},"
+              f" response: {response}")
 
 protocol_class = ClientProtocol(5)
 

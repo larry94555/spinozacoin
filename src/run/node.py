@@ -18,9 +18,6 @@ class Status(enum.Enum):
     UP = "status_up"
     UNRELIABLE = "status_unreliable"
 
-    def __init__(self):
-    pass
-
 class Node:
     """
     Node class for units of the network
@@ -183,7 +180,10 @@ class Node:
         self.receipts.receipts_for_next_neighborhood[message] = neighborhood_receipt
 
     def set_to_down(self):
-        self.directory.set_status(self.node_id, Status.DOWN)
+        """
+        set status of node to down in directory
+        """
+        self.directory.set_node_status(self.node_id, Status.DOWN)
 
     def try_to_set_node_info(self):
         """

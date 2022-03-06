@@ -6,7 +6,6 @@ There are 2 types of entries
 
 
 import math
-import util
 
 class NodeDirectory:
     """
@@ -86,7 +85,6 @@ class NodeDirectory:
         """
         #util.backup_file(self.node_file, self.NODE_BACKUP_HISTORY)
         #util.write_dict_to_file(self.node_db, self.node_file)
-        pass
 
     def populate_bootstraps(self, node_list, neighborhood_size):
         """
@@ -111,6 +109,9 @@ class NodeDirectory:
         self.persist()
 
     def set_node_status(self, node_id, status):
+        """
+        set node status in directory
+        """
         self.node_db[str(node_id)]['status'] = status
 
     def set_node_info(self, node):

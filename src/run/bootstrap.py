@@ -57,8 +57,8 @@ def main():
         node.directory.populate_bootstraps(node_list, node.get_neighborhood_size())
         try:
             node.listen()
-        except OSError as oe:
-            print(f"\nCaught error: {oe}... skipping")
+        except OSError as os_error:
+            print(f"\nCaught error: {os_error}... skipping")
     loop = asyncio.get_event_loop()
     loop.run_forever()
 
