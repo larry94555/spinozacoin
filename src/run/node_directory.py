@@ -110,6 +110,9 @@ class NodeDirectory:
         print(f"Number of neighborhoods: {num_neighborhoods}")
         self.persist()
 
+    def set_node_status(self, node_id, status):
+        self.node_db[str(node_id)]['status'] = status
+
     def set_node_info(self, node):
         """
         set node info for a given node

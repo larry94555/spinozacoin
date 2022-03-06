@@ -4,7 +4,7 @@ Protocol for validated broadcast to all nodes
 
 import asyncio
 import json
-from rpcudp.protocol import RPCProtocol
+from rpcudp_protocol import RPCProtocol
 
 class Protocol(RPCProtocol):
     """
@@ -54,7 +54,10 @@ class Protocol(RPCProtocol):
             # add to neighborhood receipt
             if node_id != self.node.node_id:
                 result = await self.protocol.broadcast_to_node(node_address, message)
-                neighborhood_receipt[str(node_id)] = result[1] if result[0] else None
+                neighborhood_receipt[str(node_id)] = result[1] if result[0] else "Down"
+                if not result[0]:
+                    self.node.set_to_down()
+                   
         neighborhood_receipt = json.dumps(neighborhood_receipt)
         self.node.save_receipt_for_current_neighborhood(message, neighborhood_receipt)
         return neighborhood_receipt

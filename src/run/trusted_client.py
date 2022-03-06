@@ -6,7 +6,7 @@ import asyncio
 import json
 import time
 
-from rpcudp.protocol import RPCProtocol
+from rpcudp_protocol import RPCProtocol
 
 start_time = time.time()
 

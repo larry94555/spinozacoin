@@ -58,8 +58,7 @@ def main():
         try:
             node.listen()
         except OSError as oe:
-            print(f"\nCaught error: {oe}")
-            exit()
+            print(f"\nCaught error: {oe}... skipping")
     loop = asyncio.get_event_loop()
     loop.run_forever()
 
