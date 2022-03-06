@@ -9,7 +9,7 @@ from hashlib import sha1
 
 import umsgpack
 
-from rpcudp.exceptions import MalformedMessage
+from rpcudp_exceptions import MalformedMessage
 
 LOG = logging.getLogger(__name__)
 
