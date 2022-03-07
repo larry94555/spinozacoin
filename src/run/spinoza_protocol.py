@@ -236,6 +236,7 @@ class Protocol(RPCProtocol):
         # either through being a registered entity
         # or by having funds which can be spent on the broadcast.
         #
+        # pylint: disable=fixme
         # TODO: Add validation for initiator.
         #
         return await self.rpc_broadcast_message_to_next_neighborhood(address, message, None, None)

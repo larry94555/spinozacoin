@@ -25,6 +25,7 @@ class ClientProtocol(RPCProtocol):
         self.protocol = protocol
         self.transport = transport
 
+    # pylint: disable=no-self-use
     def rpc_broadcast_complete(self, address, response):
         """
         call back used when broadcast complete.

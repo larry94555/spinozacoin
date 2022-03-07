@@ -18,6 +18,7 @@ class Status(enum.Enum):
     UP = "status_up"
     UNRELIABLE = "status_unreliable"
 
+# pylint: disable=too-many-public-methods
 class Node:
     """
     Node class for units of the network
@@ -193,6 +194,7 @@ class Node:
             self.node_id = util.read_num_from_file(self.info.get_node_id_file())
             self.directory.set_node_info(self)
 
+    # pylint: disable=no-self-use
     def validate_node_down(self, node_id):
         """
         validate that a node is down
