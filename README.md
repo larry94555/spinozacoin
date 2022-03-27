@@ -36,7 +36,7 @@ I will be implmenting this project in phases and will write a white paper for ea
 
 Current Status:  **Phase 1: configure up to 3900 validateable bootstrapped, test nodes, still need to add validation to test_client, registration process coming soon, and right now only simulating happy path for bootstarpped nodes (will add down nodes and random nodes for capability to test resilience)**
 
-* **Phase 1**:  Node discovery:  Provide a peer-to-peer network for nodes governed by a shared node directory of all validated nodes.
+* **Phase 1**:  Brodcast protocol and Node Directory:  Provide a peer-to-peer network for nodes governed by a shared node directory of all validated nodes.
     * **Goal 1**: Validateable, Efficient Broadcasts across registered nodes in good standing from a registered node (partially done)
     * **Goal 2**: Validation process across registered nodes in good standing from a registered node (partially done)
     * **Goal 3**: Registration process for new nodes
