@@ -43,7 +43,10 @@ Current Status:  **Phase 1: configure up to 3900 validateable bootstrapped, test
     * **Goal 4**: Rejoining process for nodes that were previously registered but go down or do not follow expected behavior
     * **Goal 5**: Consensus process for identifying nodes that are down and nodes that do not follow expected behavior
 * **Phase 2**:  Transaction and digital token support: Provide a blockchain that runs on top of the peer-to-peer network and supports unlimited, test tokens.
-    * **Goal**: Validateable, Efficient Transactions (buy, sell, donate) across registered nodes in good standing  
+    * **Goal 1**: Validateable, Efficient Transactions (buy, sell, donate) across registered nodes in good standing
+    * **Goal 2**: What is the role of accounts? How are accounts used in transactions?
+    * **Goal 3**: How can accounts be used to establish the legitimacy of transaction or be used to challenge a transaction?
+    * **Goal 4**: How can accounts be used to recover transactions? 
 * **Phase 3**:  Smart Contracts:  Provide a layer on top of blockchain to support smart contracts.
     * **Goal 1**: Reliable, Efficient, Validated mini contract across registered nodes in good standing where the programming language is Turing complete. 
     * **Goal 2**: Self-run account management system that allows account recovery
