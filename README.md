@@ -36,7 +36,7 @@ I will be implmenting this project in phases and will write a white paper for ea
 
 Current Status:  **Phase 1: configure up to 3900 validateable bootstrapped, test nodes, still need to add validation to test_client, registration process coming soon, and right now only simulating happy path for bootstarpped nodes (will add down nodes and random nodes for capability to test resilience)**
 
-* **Phase 1**:  Brodcast protocol:  Peer-to-peer network over registered nodes that share a common broadcast history.
+* **Phase 1**:  Broadcast protocol:  Peer-to-peer network over registered nodes that share a common broadcast history.
     * **Goal 1**: Validateable, Efficient Broadcasts across registered nodes in good standing from a registered node (partially done)
     * **Goal 2**: Registration process for new nodes
     * **Goal 3**: Resilience against nodes that go down and nodes that are not following expected behavior.
